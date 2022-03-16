@@ -3,7 +3,7 @@ import { Listings } from './sections';
 
 const App = () => {
   return (
-    <div className="App">
+    <div>
       <Listings title="rentiny" />
     </div>
   );
