@@ -13,7 +13,11 @@ export const server = {
             body: JSON.stringify(body),
         });
 
+        if (!res.ok) {
+            throw new Error('failed to fetch from server.')
+        }
+        
         // now; it know which kind of data types exist in graphql.
-        return res.json() as Promise<{ data: TData }>;
+        return res.json() as Promise<{ data: TData, errors: Error[] }>;
     }
 };
