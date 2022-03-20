@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import { server } from './server';
 
 interface State<TData> {
@@ -7,10 +7,36 @@ interface State<TData> {
   error: boolean;
 }
 
-type MutationTuple<TData, TVariables> = [(variables?: TVariables | undefined) => Promise<void>, State<TData>]
+type Action<TData> =
+  | { type: 'FETCH' }
+  | { type: 'FETCH_SUCCESS'; payload: TData }
+  | { type: 'FETCH_ERROR' };
 
-export const useMutation = <TData = any, TVariables = any>(query: string): MutationTuple<TData, TVariables> => {
-  const [state, setState] = useState<State<TData>>({
+const reducer =
+  <TData>() =>
+  (state: State<TData>, action: Action<TData>): State<TData> => {
+    switch (action.type) {
+      case 'FETCH':
+        return { ...state, loading: true };
+      case 'FETCH_SUCCESS':
+        return { data: action.payload, loading: false, error: false };
+      case 'FETCH_ERROR':
+        return { ...state, loading: false, error: true };
+      default:
+        throw new Error();
+    }
+  };
+
+type MutationTuple<TData, TVariables> = [
+  (variables?: TVariables | undefined) => Promise<void>,
+  State<TData>
+];
+
+export const useMutation = <TData = any, TVariables = any>(
+  query: string
+): MutationTuple<TData, TVariables> => {
+  const fetchReducer = reducer<TData>();
+  const [state, dispatch] = useReducer(fetchReducer, {
     data: null,
     loading: false,
     error: false,
@@ -18,7 +44,7 @@ export const useMutation = <TData = any, TVariables = any>(query: string): Mutat
 
   const fetch = async (variables?: TVariables) => {
     try {
-      setState({ data: null, loading: false, error: false });
+      dispatch({ type: 'FETCH' });
 
       const { data, errors } = await server.fetch<TData, TVariables>({
         query,
@@ -29,9 +55,9 @@ export const useMutation = <TData = any, TVariables = any>(query: string): Mutat
         throw new Error(errors[0].message);
       }
 
-      setState({ data, loading: false, error: false });
+      dispatch({ type: 'FETCH_SUCCESS', payload: data });
     } catch (error) {
-      setState({ data: null, loading: false, error: true });
+      dispatch({ type: 'FETCH_ERROR' });
       throw console.log(error);
     }
   };
