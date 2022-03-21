@@ -5,7 +5,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-c
+const client = new ApolloClient({
+  uri: '/api',
+  cache: new InMemoryCache()
+});
 
 ReactDOM.render(
   <ApolloProvider client={client}>
