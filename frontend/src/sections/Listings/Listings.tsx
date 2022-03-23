@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { Avatar, Button, List, Spin } from 'antd';
+import { Alert, Avatar, Button, List, Spin } from 'antd';
 import { ListingsSkeleton } from './components';
 import './styles/Listings.css';
 
@@ -52,33 +52,40 @@ const Listings = ({ title }: Props) => {
   };
 
   const listings = data ? data.listings : null;
-
   const listingsList = listings ? (
     <Spin spinning={deleteListingLoading} size="large">
-      <List
-        itemLayout="horizontal"
-        dataSource={listings}
-        renderItem={(listing) => (
-          <List.Item
-            actions={[
-              <Button
-                type="primary"
-                shape="round"
-                danger
-                onClick={() => handleDeleteListing(listing.id)}
-              >
-                Delete
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta
-              title={listing.title}
-              description={listing.address}
-              avatar={<Avatar src={listing.image} shape="square" size={48} />}
-            />
-          </List.Item>
-        )}
-      />
+      {!deleteListingError ? (
+        <List
+          itemLayout="horizontal"
+          dataSource={listings}
+          renderItem={(listing) => (
+            <List.Item
+              actions={[
+                <Button
+                  type="primary"
+                  shape="round"
+                  danger
+                  onClick={() => handleDeleteListing(listing.id)}
+                >
+                  Delete
+                </Button>,
+              ]}
+            >
+              <List.Item.Meta
+                title={listing.title}
+                description={listing.address}
+                avatar={<Avatar src={listing.image} shape="square" size={48} />}
+              />
+            </List.Item>
+          )}
+        />
+      ) : (
+        <Alert
+          type="error"
+          message="Something went wrong when deleting. Please try again later."
+          className= "listings__alert"
+        />
+      )}
     </Spin>
   ) : null;
 
@@ -98,15 +105,10 @@ const Listings = ({ title }: Props) => {
     );
   }
 
-  const deleteListingErrorMessage = deleteListingError ? (
-    <h4>failed to deleting :(</h4>
-  ) : null;
-
   return (
     <div className="listings">
       <h2>{title}</h2>
       {listingsList}
-      {deleteListingErrorMessage}
     </div>
   );
 };
