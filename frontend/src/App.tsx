@@ -1,4 +1,3 @@
-import './App.css';
 import { Listings } from './sections';
 
 const App = () => {
