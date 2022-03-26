@@ -3,6 +3,8 @@
   "proxy": "http://127.0.0.1:5000",
   "version": "0.1.0",
   "private": true,
+  "author": "YAHYA UNLU",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@testing-library/jest-dom": "^5.16.2",
