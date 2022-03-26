@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev --respawn backend/src/index.ts",
+    "server": "ts-node-dev --respawn backend/src/index.ts",
     "client": "npm start --prefix frontend",
-    "server": "nodemon --exec ts-node backend/src/index.ts",
-    "dev": "concurrently \"npm run start\" \"npm run client\"",
+    "server-nodemon": "nodemon --exec ts-node backend/src/index.ts",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "tsc -p backend/build",
     "seed": "ts-node backend/temp/seed.ts",
     "clear": "ts-node backend/temp/clear.ts"
