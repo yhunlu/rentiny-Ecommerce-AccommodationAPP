@@ -497,9 +497,9 @@
   margin-top: 5px;
 }
 .log-in-card__google-button {
-  margin: 40px auto;
+  margin: 1px auto;
   border-radius: 2px;
-  background-color: #4285f4;
+  background-color: #0f9d58;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.24), 0 0 1px 0 rgba(0, 0, 0, 0.12);
   border: none;
   display: flex;
@@ -512,10 +512,14 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 .log-in-card__google-button:active {
-  background: #3367d6;
+  color: Black;
+  background: #2cfc97;
 }
 .log-in-card__google-button-logo {
-  height: 43px;
+  margin: 5px auto;
+  padding: 1px;
+  height: 50px;
+  width: 50px;
 }
 .log-in-card__google-button-text {
   text-align: left;
@@ -627,7 +631,7 @@ html {
 #app {
   position: relative;
   background: #fff;
-  min-height: 100vh;
+  min-height: 30vh;
 }
 .app-skeleton {
   height: 100%;
