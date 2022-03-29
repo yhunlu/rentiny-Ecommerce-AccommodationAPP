@@ -16,13 +16,12 @@ type Props = {}
 
 const App = (props: Props) => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
-  console.log(viewer);
   
   return (
     <Router>
       <Layout id="app" />
       <Affix offsetTop={0} className="app__affix-header">
-        <AppHeader viewer={viewer} />
+        <AppHeader viewer={viewer} setViewer={setViewer} />
       </Affix>
       <Routes>
         <Route path="/login" element={<Login {...props} setViewer={setViewer} />} />

@@ -1,26 +1,55 @@
 import { HomeTwoTone, LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Menu } from 'antd';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Viewer } from './../../../../lib/types';
+import { LOG_OUT } from '../../../../lib/graphql/mutations';
+import { LogOut as LogOutData } from './../../../../lib/graphql/mutations/LogOut/__generated__/LogOut';
+import { useMutation } from '@apollo/client';
+import {
+    displayErrorMessage,
+    displaySuccessNotification,
+} from '../../../../lib/utils';
 
 interface Props {
     viewer: Viewer;
+    setViewer: (viewer: Viewer) => void;
 }
 
 const { Item, SubMenu } = Menu;
 
-const MenuItems = ({ viewer }: Props) => {
+const MenuItems = ({ viewer, setViewer }: Props) => {
+    const [logOut] = useMutation<LogOutData>(LOG_OUT, {
+        onCompleted: (data) => {
+            if (data && data.logOut) {
+                setViewer(data.logOut);
+                displaySuccessNotification('You have successfully logged out!');
+            }
+        },
+        onError: () => {
+            displayErrorMessage(
+                "Sorry! We weren't able to log you out. Please try again later!"
+            );
+        },
+    });
+
+    const handleLogOut = () => {
+        logOut();
+    };
+
     const subMenuLogin =
         viewer.id && viewer.avatar ? (
-            <SubMenu title={<Avatar src={viewer.avatar} />}>
+            <SubMenu key="profile_submenu" title={<Avatar src={viewer.avatar} />}>
                 <Item key="/user">
-                    <UserOutlined />
-                    <span>Profile</span>
+                    <Link to={`/user/${viewer.id}`}>
+                        <UserOutlined />
+                        <span>Profile</span>
+                    </Link>
                 </Item>
                 <Item key="/logout">
-                    <LoginOutlined />
-                    <span>Logout</span>
+                    <div onClick={handleLogOut}>
+                        <LoginOutlined />
+                        <span>Logout</span>
+                    </div>
                 </Item>
             </SubMenu>
         ) : (

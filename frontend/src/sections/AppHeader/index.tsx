@@ -8,11 +8,12 @@ import { Viewer } from './../../lib/types';
 
 interface Props {
     viewer: Viewer;
+    setViewer: (viewer: Viewer) => void;
 }
 
 const { Header } = Layout;
 
-const AppHeader = ({ viewer }: Props) => {
+const AppHeader = ({ viewer, setViewer }: Props) => {
     return (
         <Header className="app-header">
             <div className="app-header__logo-search-section">
@@ -23,7 +24,7 @@ const AppHeader = ({ viewer }: Props) => {
                 </div>
             </div>
             <div className="app-header__menu-section">
-                <MenuItems viewer={viewer} />
+                <MenuItems viewer={viewer} setViewer={setViewer}/>
             </div>
         </Header>
     );
