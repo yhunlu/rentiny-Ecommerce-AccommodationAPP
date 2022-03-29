@@ -1,6 +1,6 @@
-import { Layout } from 'antd';
+import { Affix, Layout } from 'antd';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Home, Host, Listing, Listings, NotFound, User, Login } from './sections';
+import { Home, Host, Listing, Listings, NotFound, User, Login, AppHeader } from './sections';
 import { Viewer } from './lib/types';
 import { useState } from 'react';
 
@@ -21,6 +21,9 @@ const App = (props: Props) => {
   return (
     <Router>
       <Layout id="app" />
+      <Affix offsetTop={0} className="app__affix-header">
+        <AppHeader />
+      </Affix>
       <Routes>
         <Route path="/login" element={<Login {...props} setViewer={setViewer} />} />
         <Route path="/" element={<Home />} />

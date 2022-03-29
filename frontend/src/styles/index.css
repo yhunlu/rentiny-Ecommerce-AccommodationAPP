@@ -24,10 +24,10 @@
 }
 .app-header__logo {
   display: inline-block;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 .app-header__logo img {
-  width: 36px;
+  width: 80px;
 }
 .app-header__search-input {
   display: flex;
@@ -486,6 +486,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 150px auto;
 }
 .log-in-card {
   width: 450px;
@@ -631,7 +632,6 @@ html {
 #app {
   position: relative;
   background: #fff;
-  min-height: 30vh;
 }
 .app-skeleton {
   height: 100%;
