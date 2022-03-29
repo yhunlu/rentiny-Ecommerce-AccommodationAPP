@@ -22,7 +22,7 @@ const App = (props: Props) => {
     <Router>
       <Layout id="app" />
       <Affix offsetTop={0} className="app__affix-header">
-        <AppHeader />
+        <AppHeader viewer={viewer} />
       </Affix>
       <Routes>
         <Route path="/login" element={<Login {...props} setViewer={setViewer} />} />

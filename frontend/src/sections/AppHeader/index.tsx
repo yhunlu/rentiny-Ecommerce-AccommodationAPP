@@ -3,10 +3,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import logo from './assets/rentiny-logo.png';
+import { MenuItems } from './components';
+import { Viewer } from './../../lib/types';
+
+interface Props {
+    viewer: Viewer;
+}
 
 const { Header } = Layout;
 
-const AppHeader = () => {
+const AppHeader = ({ viewer }: Props) => {
     return (
         <Header className="app-header">
             <div className="app-header__logo-search-section">
@@ -15,6 +21,9 @@ const AppHeader = () => {
                         <img src={logo} alt="logo" />
                     </Link>
                 </div>
+            </div>
+            <div className="app-header__menu-section">
+                <MenuItems viewer={viewer} />
             </div>
         </Header>
     );
