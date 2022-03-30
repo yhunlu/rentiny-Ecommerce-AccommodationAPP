@@ -33,9 +33,6 @@ const Login = ({ setViewer }: Props) => {
         if (data && data.logIn) {
           setViewer(data.logIn);
           displaySuccessNotification("You're now logged in!");
-          if (data.logIn.token) {
-            sessionStorage.setItem('token', data.logIn.token);
-          }
         }
       },
     });
