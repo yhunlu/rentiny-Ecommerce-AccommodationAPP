@@ -99,13 +99,12 @@ const logInViaCookie = async (
   req: Request,
   res: Response
 ): Promise<User | null> => {
-  const updateRes = await db.users.findOneAndUpdate(
+  const updateReq = await db.users.findOneAndUpdate(
     { _id: req.signedCookies.viewer },
     { $set: { token } },
-    { upsert: false }
+    { returnDocument: 'after' }
   );
-
-  const viewer = updateRes.value;
+  const viewer = updateReq.value;
 
   if (!viewer) {
     res.clearCookie('viewer', cookieOptions);
@@ -127,14 +126,14 @@ export const viewerResolvers: IResolvers = {
   Mutation: {
     logIn: async (
       _root: undefined,
-      { input }: LogInArgs,
+      { login }: LogInArgs,
       { db, req, res }: { db: Database; req: Request; res: Response }
     ): Promise<Viewer> => {
       try {
-        const code = input ? input.code : null;
+        const code = login ? login.code : null;
         const token = crypto.randomBytes(16).toString('hex');
 
-        const viewer = code
+        const viewer: User | null = code
           ? await LogInViaGoogle(code, token, db, res)
           : await logInViaCookie(token, db, req, res);
 

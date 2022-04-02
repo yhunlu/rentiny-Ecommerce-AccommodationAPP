@@ -18,7 +18,6 @@ import {
 } from '../../lib/utils';
 import { Navigate } from 'react-router-dom';
 
-
 const { Content } = Layout;
 const { Text, Title } = Typography;
 interface Props {
@@ -30,8 +29,10 @@ const Login = ({ setViewer }: Props) => {
   const [logIn, { data: logInData, loading: logInLoading, error: logInError }] =
     useMutation<LogInData, LogInVariables>(LOG_IN, {
       onCompleted: (data) => {
-        if (data && data.logIn) {
+        if (data && data.logIn && data.logIn.token) {
           setViewer(data.logIn);
+          // set session
+          sessionStorage.setItem('token', data.logIn.token);
           displaySuccessNotification("You're now logged in!");
         }
       },
@@ -56,7 +57,9 @@ const Login = ({ setViewer }: Props) => {
         query: AUTH_URL,
       });
 
-      window.location.href = data.authUrl;
+      if (data) {
+        window.location.href = data.authUrl;
+      }
     } catch (error) {
       displayErrorMessage(
         "Sorry! We weren't able to log you in. Please try again later."
@@ -75,7 +78,7 @@ const Login = ({ setViewer }: Props) => {
   if (logInData && logInData.logIn) {
     const { id: viewerId } = logInData.logIn;
     // replace: avoid extra redirects after the user click back.
-    return <Navigate to={`/user/${viewerId}`} replace />
+    return <Navigate to={`/user/${viewerId}`} replace />;
   }
 
   const LogInErrorBannerElement = logInError ? (
