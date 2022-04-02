@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import './styles/index.css';
@@ -7,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 const client = new ApolloClient({
   uri: '/api',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
