@@ -40,7 +40,7 @@ export const typeDefs = gql`
   }
 
   type User {
-    _id: ID!
+    id: ID!
     name: String!
     avatar: String!
     contact: String!
@@ -64,7 +64,7 @@ export const typeDefs = gql`
 
   type Query {
     authUrl: String!
-    user(id: ID!): String!
+    user(id: ID!): User!
   }
 
   type Mutation {
