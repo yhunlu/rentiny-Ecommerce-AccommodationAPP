@@ -7,10 +7,13 @@ import {
 } from './../../lib/graphql/queries/User/__generated__/User';
 import { useParams } from 'react-router';
 import { Viewer } from './../../lib/types';
-
+import { Col, Layout, Row } from 'antd';
+import { UserProfile } from './components';
 interface UserProps {
   viewer: Viewer;
 }
+
+const { Content } = Layout;
 
 const User = ({ viewer }: UserProps) => {
   const { userId } = useParams();
@@ -20,7 +23,18 @@ const User = ({ viewer }: UserProps) => {
     },
   });
 
-  return <div>User</div>;
+  const user = data ? data.user : null;
+  const userProfileElement = user ? <UserProfile user={user} /> : null;
+  
+  return (
+    <Content className="user">
+      <Row gutter={12} justify='space-between'>
+        <Col xs={24}>
+          {userProfileElement}
+        </Col>
+      </Row>
+    </Content>
+  );
 };
 
 export default User;
