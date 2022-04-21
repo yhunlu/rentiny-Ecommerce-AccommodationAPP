@@ -28,9 +28,7 @@ const initialViewer: Viewer = {
   didRequest: false,
 };
 
-type Props = {};
-
-const App = (props: Props) => {
+const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
   const [logIn, { error }] = useMutation<LogInData, LogInVariables>(LOG_IN, {
     onCompleted: (data) => {
@@ -76,13 +74,13 @@ const App = (props: Props) => {
         <Routes>
           <Route
             path="/login"
-            element={<Login {...props} setViewer={setViewer} />}
+            element={<Login setViewer={setViewer} />}
           />
           <Route path="/" element={<Home />} />
           <Route path="/host" element={<Host />} />
           <Route path="/listing/:id" element={<Listing />} />
           <Route path="/listings/:location" element={<Listings />} />
-          <Route path="/user/:id" element={<User />} />
+          <Route path="/user/:userId" element={<User viewer={viewer} />} />
           <Route path="/not-found" element={<NotFound />} />
         </Routes>
       </Layout>
