@@ -24,14 +24,15 @@ const User = ({ viewer }: UserProps) => {
   });
 
   const user = data ? data.user : null;
-  const userProfileElement = user ? <UserProfile user={user} /> : null;
-  
+  const viewerIsUser = viewer.id === userId;
+  const userProfileElement = user ? (
+    <UserProfile user={user} viewerIsUser={viewerIsUser} />
+  ) : null;
+
   return (
     <Content className="user">
-      <Row gutter={12} justify='space-between'>
-        <Col xs={24}>
-          {userProfileElement}
-        </Col>
+      <Row gutter={12} justify="space-between">
+        <Col xs={24}>{userProfileElement}</Col>
       </Row>
     </Content>
   );
