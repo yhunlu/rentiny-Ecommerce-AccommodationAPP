@@ -9,6 +9,7 @@ import { useParams } from 'react-router';
 import { Viewer } from './../../lib/types';
 import { Col, Layout, Row } from 'antd';
 import { UserProfile } from './components';
+import { ErrorBanner, PageSkeleton } from '../../lib/components';
 interface UserProps {
   viewer: Viewer;
 }
@@ -22,6 +23,23 @@ const User = ({ viewer }: UserProps) => {
       id: userId ?? '',
     },
   });
+
+  if (loading) {
+    return (
+      <Content className="user">
+        <PageSkeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content className="user">
+        <ErrorBanner description="This user may not exist or we've encountered an error. Please try again soon." />
+        <PageSkeleton />
+      </Content>
+    );
+  }
 
   const user = data ? data.user : null;
   const viewerIsUser = viewer.id === userId;
