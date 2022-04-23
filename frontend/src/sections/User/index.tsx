@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { USER } from '../../lib/graphql/queries';
 import {
@@ -15,12 +15,18 @@ interface UserProps {
 }
 
 const { Content } = Layout;
+const PAGE_LIMIT = 4;
 
 const User = ({ viewer }: UserProps) => {
+  const [listingsPage, setListingsPage] = useState(1);
+  const [bookingsPage, setBookingsPage] = useState(1);
   const { userId } = useParams();
   const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
     variables: {
       id: userId ?? '',
+      bookingsPage: bookingsPage,
+      listingsPage: listingsPage,
+      limit: PAGE_LIMIT,
     },
   });
 
