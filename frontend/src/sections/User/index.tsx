@@ -8,7 +8,7 @@ import {
 import { useParams } from 'react-router';
 import { Viewer } from './../../lib/types';
 import { Col, Layout, Row } from 'antd';
-import { UserProfile } from './components';
+import { UserBookings, UserListings, UserProfile } from './components';
 import { ErrorBanner, PageSkeleton } from '../../lib/components';
 interface UserProps {
   viewer: Viewer;
@@ -24,8 +24,8 @@ const User = ({ viewer }: UserProps) => {
   const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
     variables: {
       id: userId ?? '',
-      bookingsPage: bookingsPage,
-      listingsPage: listingsPage,
+      bookingsPage,
+      listingsPage,
       limit: PAGE_LIMIT,
     },
   });
@@ -49,14 +49,42 @@ const User = ({ viewer }: UserProps) => {
 
   const user = data ? data.user : null;
   const viewerIsUser = viewer.id === userId;
+
+  const userListings = user ? user.listings : null;
+  const userBookings = user ? user.bookings : null;
+
   const userProfileElement = user ? (
     <UserProfile user={user} viewerIsUser={viewerIsUser} />
+  ) : null;
+
+  const userListingsElement = userListings ? (
+    <UserListings
+      userListings={userListings}
+      listingsPage={listingsPage}
+      setListingsPage={setListingsPage}
+      limit={PAGE_LIMIT}
+    />
+  ) : null;
+
+  const userBookingsElement = userBookings ? (
+    <UserBookings
+      userBookings={userBookings}
+      bookingsPage={bookingsPage}
+      setBookingsPage={setBookingsPage}
+      limit={PAGE_LIMIT}
+    />
   ) : null;
 
   return (
     <Content className="user">
       <Row gutter={12} justify="space-between">
         <Col xs={24}>{userProfileElement}</Col>
+        <Col xs={24}>
+          {userListingsElement}
+        </Col>
+        <Col xs={24}>
+          {userBookingsElement}
+        </Col>
       </Row>
     </Content>
   );
