@@ -1,11 +1,11 @@
 import { List, Typography } from 'antd';
 import React from 'react';
 import { ListingCard } from '../../../../lib/components';
-import { User } from './../../../../lib/graphql/queries/User/__generated__/User';
+import { User_user_listings } from './../../../../lib/graphql/queries/User/__generated__/User';
 
 interface Props {
-  userListings: User['user']['listings'];
-  listingsPage: number;
+  userListings: User_user_listings;
+  page: number;
   limit: number;
   setListingsPage: (page: number) => void;
 }
@@ -14,7 +14,7 @@ const { Paragraph, Title } = Typography;
 
 const UserListings = ({
   userListings,
-  listingsPage,
+  page,
   limit,
   setListingsPage,
 }: Props) => {
@@ -32,8 +32,8 @@ const UserListings = ({
       locale={{ emptyText: "User doesn't have any listings yet!" }}
       pagination={{
         position: 'top',
-        current: listingsPage,
-        total: total,
+        current: page,
+        total,
         defaultPageSize: limit,
         hideOnSinglePage: true,
         showLessItems: true,

@@ -15,7 +15,7 @@ interface UserProps {
 }
 
 const { Content } = Layout;
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 10;
 
 const User = ({ viewer }: UserProps) => {
   const [listingsPage, setListingsPage] = useState(1);
@@ -50,8 +50,8 @@ const User = ({ viewer }: UserProps) => {
   const user = data ? data.user : null;
   const viewerIsUser = viewer.id === userId;
 
-  const userListings = user ? user.listings : null;
-  const userBookings = user ? user.bookings : null;
+  const userListings = user?.listings ?? null;
+  const userBookings = user?.bookings ?? null;
 
   const userProfileElement = user ? (
     <UserProfile user={user} viewerIsUser={viewerIsUser} />
@@ -60,18 +60,18 @@ const User = ({ viewer }: UserProps) => {
   const userListingsElement = userListings ? (
     <UserListings
       userListings={userListings}
-      listingsPage={listingsPage}
-      setListingsPage={setListingsPage}
+      page={listingsPage}
       limit={PAGE_LIMIT}
+      setListingsPage={setListingsPage}
     />
   ) : null;
 
   const userBookingsElement = userBookings ? (
     <UserBookings
       userBookings={userBookings}
-      bookingsPage={bookingsPage}
-      setBookingsPage={setBookingsPage}
+      page={bookingsPage}
       limit={PAGE_LIMIT}
+      setBookingsPage={setBookingsPage}
     />
   ) : null;
 
@@ -79,12 +79,8 @@ const User = ({ viewer }: UserProps) => {
     <Content className="user">
       <Row gutter={12} justify="space-between">
         <Col xs={24}>{userProfileElement}</Col>
-        <Col xs={24}>
-          {userListingsElement}
-        </Col>
-        <Col xs={24}>
-          {userBookingsElement}
-        </Col>
+        <Col xs={24}>{userListingsElement}</Col>
+        <Col xs={24}>{userBookingsElement}</Col>
       </Row>
     </Content>
   );

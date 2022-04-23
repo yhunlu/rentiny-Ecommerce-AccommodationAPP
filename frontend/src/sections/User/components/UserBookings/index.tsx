@@ -5,7 +5,7 @@ import { User } from './../../../../lib/graphql/queries/User/__generated__/User'
 
 interface Props {
   userBookings: User['user']['bookings'];
-  bookingsPage: number;
+  page: number;
   limit: number;
   setBookingsPage: (page: number) => void;
 }
@@ -14,7 +14,7 @@ const { Paragraph, Text, Title } = Typography;
 
 const UserBookings = ({
   userBookings,
-  bookingsPage,
+  page,
   limit,
   setBookingsPage,
 }: Props) => {
@@ -34,7 +34,7 @@ const UserBookings = ({
         locale={{ emptyText: "You haven't made any bookings!" }}
         pagination={{
           position: 'top',
-          current: bookingsPage,
+          current: page,
           total: total ? total : undefined,
           defaultPageSize: limit,
           hideOnSinglePage: true,
