@@ -39,6 +39,8 @@ const ListingDetails = ({ listing }: Props) => {
                 </Title>
             </div>
 
+            <Divider />
+
             <div className="listing-details__section">
                 <NavLink to={`/user/${host.id}`}>
                     <Avatar src={host.avatar} size={64} />

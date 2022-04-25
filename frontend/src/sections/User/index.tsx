@@ -15,7 +15,7 @@ interface UserProps {
 }
 
 const { Content } = Layout;
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 10;
 
 const User = ({ viewer }: UserProps) => {
   const [listingsPage, setListingsPage] = useState(1);

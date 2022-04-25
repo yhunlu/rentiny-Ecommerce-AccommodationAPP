@@ -54,7 +54,7 @@ const Listing = () => {
   return (
     <Content className="listing">
       <Row gutter={24} justify="space-between">
-        <Col xs={24} md={14}>
+        <Col xs={24} lg={14}>
           {listingDetailsElement}
         </Col>
       </Row>
