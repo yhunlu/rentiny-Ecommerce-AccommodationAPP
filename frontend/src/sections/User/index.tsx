@@ -15,7 +15,7 @@ interface UserProps {
 }
 
 const { Content } = Layout;
-const PAGE_LIMIT = 10;
+const PAGE_LIMIT = 4;
 
 const User = ({ viewer }: UserProps) => {
   const [listingsPage, setListingsPage] = useState(1);
@@ -24,8 +24,8 @@ const User = ({ viewer }: UserProps) => {
   const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
     variables: {
       id: userId ?? '',
-      bookingsPage,
-      listingsPage,
+      bookingsPage: bookingsPage,
+      listingsPage: listingsPage,
       limit: PAGE_LIMIT,
     },
   });

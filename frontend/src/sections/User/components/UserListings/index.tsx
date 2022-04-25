@@ -33,7 +33,7 @@ const UserListings = ({
       pagination={{
         position: 'top',
         current: page,
-        total,
+        total: total,
         defaultPageSize: limit,
         hideOnSinglePage: true,
         showLessItems: true,
