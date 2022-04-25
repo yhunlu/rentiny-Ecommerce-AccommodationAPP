@@ -1,11 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { LISTING } from '../../lib/graphql/queries';
+import { useQuery } from '@apollo/client';
+import {
+  Listing as ListingData,
+  ListingVariables,
+} from './../../lib/graphql/queries/Listing/__generated__/Listing';
+import { useParams } from 'react-router';
+import { Col, Layout, Row } from 'antd';
+import { ErrorBanner, PageSkeleton } from '../../lib/components';
 
-type Props = {}
+const PAGE_LIMIT = 3;
+const { Content } = Layout;
 
-const Listing = (props: Props) => {
-  return (
-    <div>Listing</div>
-  )
-}
+const Listing = () => {
+  const [bookingPage, setBookingPage] = useState(1);
+  const { listingId } = useParams();
+  const { data, loading, error } = useQuery<ListingData, ListingVariables>(
+    LISTING,
+    {
+      variables: {
+        id: listingId ?? '',
+        bookingsPage: bookingPage,
+        limit: PAGE_LIMIT,
+      },
+    }
+  );
 
-export default Listing
+  if (loading) {
+    return (
+      <Content className="listing">
+        <PageSkeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content className="listing">
+        <ErrorBanner description="This listing may not exist or we've encountered an error. Please try again soon." />
+        <PageSkeleton />
+      </Content>
+    );
+  }
+
+  const listing = data ? data.listing : null;
+  const listingBookings = listing ? listing.bookings : null;
+
+  return <div>Listing</div>;
+};
+
+export default Listing;
