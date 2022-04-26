@@ -1,10 +1,10 @@
 import { List, Typography } from 'antd';
 import React from 'react';
 import { ListingCard } from '../../../../lib/components';
-import { User_user_listings } from './../../../../lib/graphql/queries/User/__generated__/User';
+import { User } from './../../../../lib/graphql/queries/User/__generated__/User';
 
 interface Props {
-  userListings: User_user_listings;
+  userListings: User['user']['listings'];
   page: number;
   limit: number;
   setListingsPage: (page: number) => void;
@@ -18,34 +18,35 @@ const UserListings = ({
   limit,
   setListingsPage,
 }: Props) => {
-  const { total, result } = userListings;
+  const total = userListings ? userListings.total : null;
+  const result = userListings ? userListings.result : null;
 
-  const userListingsList = (
+  const userListingsList = userListings ? (
     <List
       grid={{
         gutter: 8,
         xs: 1,
         sm: 2,
-        lg: 4,
+        lg: 3,
       }}
-      dataSource={result}
+      dataSource={result ? result : undefined}
       locale={{ emptyText: "User doesn't have any listings yet!" }}
       pagination={{
         position: 'top',
         current: page,
-        total: total,
+        total: total ? total : undefined,
         defaultPageSize: limit,
         hideOnSinglePage: true,
         showLessItems: true,
         onChange: (page: number) => setListingsPage(page),
       }}
-      renderItem={(userlisting) => (
+      renderItem={(userListing) => (
         <List.Item>
-          <ListingCard listing={userlisting} />
+          <ListingCard listing={userListing} />
         </List.Item>
       )}
     />
-  );
+  ) : null;
 
   return (
     <div className="user-listings">
