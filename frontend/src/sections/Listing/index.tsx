@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Moment } from 'moment';
 import { LISTING } from '../../lib/graphql/queries';
 import { useQuery } from '@apollo/client';
 import {
@@ -8,13 +9,20 @@ import {
 import { useParams } from 'react-router';
 import { Col, Layout, Row } from 'antd';
 import { ErrorBanner, PageSkeleton } from '../../lib/components';
-import { ListingBookings, ListingCreateBooking, ListingDetails } from './components';
+import {
+  ListingBookings,
+  ListingCreateBooking,
+  ListingDetails,
+} from './components';
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
 
 const Listing = () => {
   const [bookingPage, setBookingPage] = useState(1);
+  const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
+
   const { listingId } = useParams();
   const { data, loading, error } = useQuery<ListingData, ListingVariables>(
     LISTING,
@@ -117,7 +125,15 @@ const Listing = () => {
     />
   ) : null;
 
-  const listingCreateBookingElement = listing ? ( <ListingCreateBooking price={listing.price} /> ) : null;
+  const listingCreateBookingElement = listing ? (
+    <ListingCreateBooking 
+      price={listing.price}
+      checkInDate={checkInDate}
+      checkOutDate={checkOutDate}
+      setCheckInDate={setCheckInDate}
+      setCheckOutDate={setCheckOutDate}
+    />
+  ) : null;
 
   return (
     <Content className="listing">
