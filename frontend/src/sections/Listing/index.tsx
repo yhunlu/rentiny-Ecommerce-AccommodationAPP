@@ -8,7 +8,7 @@ import {
 import { useParams } from 'react-router';
 import { Col, Layout, Row } from 'antd';
 import { ErrorBanner, PageSkeleton } from '../../lib/components';
-import { ListingBookings, ListingDetails } from './components';
+import { ListingBookings, ListingCreateBooking, ListingDetails } from './components';
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
@@ -117,12 +117,17 @@ const Listing = () => {
     />
   ) : null;
 
+  const listingCreateBookingElement = listing ? ( <ListingCreateBooking price={listing.price} /> ) : null;
+
   return (
     <Content className="listing">
       <Row gutter={24} justify="space-between">
         <Col xs={24} lg={14}>
           {listingDetailsElement}
           {listingBookingsElement}
+        </Col>
+        <Col xs={24} lg={10}>
+          {listingCreateBookingElement}
         </Col>
       </Row>
     </Content>
