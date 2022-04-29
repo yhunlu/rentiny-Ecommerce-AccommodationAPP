@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Col, Layout, Row, Typography } from 'antd'
+import { Col, Layout, Row, Typography } from 'antd'
 import { HomeHero } from './components'
 import { useNavigate } from 'react-router-dom';
 import { displayErrorMessage } from '../../lib/utils';
