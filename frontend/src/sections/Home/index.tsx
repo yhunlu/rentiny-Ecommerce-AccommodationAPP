@@ -1,10 +1,14 @@
 import React from 'react'
-import { Layout, Typography } from 'antd'
+import { Card, Col, Layout, Row, Typography } from 'antd'
 import { HomeHero } from './components'
-import mapBackground from "./assets/map-background.jpg";
 import { useNavigate } from 'react-router-dom';
 import { displayErrorMessage } from '../../lib/utils';
 import { Link } from 'react-router-dom';
+
+import mapBackground from "./assets/map-background.jpg";
+import sanFransiscoImage from "./assets/san-fransisco.jpg";
+import cancunImage from "./assets/cancun.jpg";
+
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
@@ -35,6 +39,28 @@ const Home = () => {
         <Link to="/listings/united%20states" className="ant-btn ant-btn-primary ant-btn-lg home__cta-section-button">
           Popular listings in United States
         </Link>
+      </div>
+
+      <div className="home__listings">
+        <Title level={4} className="home__listings-title">
+          Listings in any kind
+        </Title>
+        <Row gutter={12}>
+          <Col xs={24} sm={12}>
+            <Link to="/listings/san%20fransisco">
+              <div className="home__listings-img-cover">
+                <img alt="San Francisco" src={sanFransiscoImage} className="home__listings-img" />
+              </div>
+            </Link>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Link to="/listings/cancun">
+              <div className="home__listings-img-cover">
+                <img alt="Cancun" src={cancunImage} className="home__listings-img" />
+              </div>
+            </Link>
+          </Col>
+        </Row>
       </div>
     </Content>
   )
