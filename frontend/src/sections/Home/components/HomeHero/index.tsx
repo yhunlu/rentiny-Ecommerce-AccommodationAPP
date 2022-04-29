@@ -7,12 +7,14 @@ import losAngelesImage from '../../assets/los-angeles.jpg';
 import londonImage from '../../assets/london.jpg';
 import { NavLink } from 'react-router-dom';
 
-type Props = {};
+interface Props {
+  onSearch: (value: string) => void;
+};
 
 const { Title } = Typography;
 const { Search } = Input;
 
-const HomeHero = (props: Props) => {
+const HomeHero = ({ onSearch }: Props) => {
   return (
     <div className="home-hero">
       <div className="home-hero__search">
@@ -24,7 +26,7 @@ const HomeHero = (props: Props) => {
           enterButton
           size="large"
           className="home-hero__search-input"
-          onSearch={(value) => console.log(value)}
+          onSearch={onSearch}
         />
       </div>
       <Row gutter={12} className="home-hero__cards">
