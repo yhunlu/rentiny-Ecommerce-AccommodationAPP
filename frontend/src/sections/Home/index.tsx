@@ -9,11 +9,30 @@ import mapBackground from "./assets/map-background.jpg";
 import sanFransiscoImage from "./assets/san-fransisco.jpg";
 import cancunImage from "./assets/cancun.jpg";
 
+import { useQuery } from '@apollo/client';
+import { Listings as ListingsData, ListingsVariables } from './../../lib/graphql/queries/Listings/__generated__/Listings';
+import { ListingsFilter } from '../../lib/graphql/globalTypes';
+import { LISTINGS } from '../../lib/graphql/queries';
 
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
+const PAGE_LIMIT = 4;
+const PAGE_NUMBER = 1;
+
 const Home = () => {
+  const { loading, data } = useQuery<ListingsData, ListingsVariables>(
+    LISTINGS,
+    {
+      variables: {
+        filter: ListingsFilter.PRICE_HIGH_TO_LOW,
+        limit: PAGE_LIMIT,
+        page: PAGE_NUMBER,
+      }
+    }
+  );
+
+  console.log(data);
   const navigate = useNavigate();
 
   const onSearch = (value: string) => {
