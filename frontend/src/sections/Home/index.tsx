@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Layout, Row, Typography } from 'antd';
-import { HomeHero, HomeListings } from './components';
+import { HomeHero, HomeListings, HomeListingsSkeleton } from './components';
 import { useNavigate } from 'react-router-dom';
 import { displayErrorMessage } from '../../lib/utils';
 import { Link } from 'react-router-dom';
@@ -47,9 +47,9 @@ const Home = () => {
   };
 
   const renderListingsSection = () => {
-    // if (loading) {
-    //   return <HomeListingsSkeleton />;
-    // }
+    if (loading) {
+      return <HomeListingsSkeleton />;
+    }
 
     if (data) {
       return (
