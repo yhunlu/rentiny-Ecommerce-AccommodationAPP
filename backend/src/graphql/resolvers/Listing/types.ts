@@ -27,6 +27,7 @@ export interface ListingsArgs {
 }
 
 export interface ListingsData {
+  region: string | null;
   total: number;
   result: Listing[];
 }
