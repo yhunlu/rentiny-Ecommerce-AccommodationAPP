@@ -37,7 +37,6 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.3.13",
     "apollo-server-express": "^3.6.4",
-    "axios": "^0.27.2",
     "body-parser": "^1.19.2",
     "concurrently": "^7.0.0",
     "cookie-parser": "^1.4.6",

@@ -4,18 +4,27 @@ import { ObjectId } from 'mongodb';
 import { authorize } from '../../../lib/utils';
 import { Request } from 'express';
 import { calculateSkip } from './../utils';
-import { ListingArgs, ListingBookingsArgs, ListingBookingsData, ListingsArgs, ListingsData, ListingsFilter } from './types';
+import {
+  ListingArgs,
+  ListingBookingsArgs,
+  ListingBookingsData,
+  ListingsArgs,
+  ListingsData,
+  ListingsFilter,
+  ListingsQuery,
+} from './types';
+import { Google } from '../../../lib/api';
 
 export const listingResolvers: IResolvers = {
   Query: {
-      listing: listingQuery,
-      listings: listingsQuery,
+    listing: listingQuery,
+    listings: listingsQuery,
   },
   Listing: {
-      id: getListingId,
-      host: getListingHost,
-      bookingsIndex: getListingBookingsIndex,
-      bookings: getListingBookings,
+    id: getListingId,
+    host: getListingHost,
+    bookingsIndex: getListingBookingsIndex,
+    bookings: getListingBookings,
   },
 };
 
@@ -25,53 +34,69 @@ async function listingQuery(
   { db, req }: { db: Database; req: Request }
 ): Promise<Listing | null> {
   try {
-      const listing = await db.listings.findOne({
-          _id: new ObjectId(id),
-      });
+    const listing = await db.listings.findOne({
+      _id: new ObjectId(id),
+    });
 
-      if (!listing) {
-          throw new Error("Listing can't be found");
-      }
+    if (!listing) {
+      throw new Error("Listing can't be found");
+    }
 
-      const viewer = await authorize(db, req);
-      if (viewer && viewer._id === listing.host) {
-          listing.authorized = true;
-      }
+    const viewer = await authorize(db, req);
+    if (viewer && viewer._id === listing.host) {
+      listing.authorized = true;
+    }
 
-      return listing;
+    return listing;
   } catch (error) {
-      throw new Error(`Failed to get listing: ${error}`);
+    throw new Error(`Failed to get listing: ${error}`);
   }
 }
 
 async function listingsQuery(
   _root: undefined,
-  { filter, limit, page }: ListingsArgs,
+  { location, filter, limit, page }: ListingsArgs,
   { db }: { db: Database }
 ): Promise<ListingsData> {
   try {
-      let cursor = await db.listings.find({});
-      if (filter && filter === ListingsFilter.PRICE_LOW_TO_HIGH) {
-          cursor = cursor.sort({
-              price: 1,
-          });
-      }
-      if (filter && filter === ListingsFilter.PRICE_HIGH_TO_LOW) {
-          cursor = cursor.sort({
-              price: -1,
-          });
-      }
+    const query: ListingsQuery = {};
 
-      cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
-      const listings = await cursor.toArray();
-      const count = await cursor.count();
+    const data: ListingsData = {
+      total: 0,
+      result: [],
+    };
 
-      return {
-          total: count,
-          result: listings,
-      };
+    if (location) {
+      const { country, admin, city } = await Google.geocode(location);
+
+      if (city) query.city = city;
+      if (admin) query.admin = admin;
+      if (country) {
+        query.country = country;
+      } else {
+        throw new Error('No country found');
+      }
+    }
+
+    let cursor = await db.listings.find(query);
+    if (filter && filter === ListingsFilter.PRICE_LOW_TO_HIGH) {
+      cursor = cursor.sort({
+        price: 1,
+      });
+    }
+    if (filter && filter === ListingsFilter.PRICE_HIGH_TO_LOW) {
+      cursor = cursor.sort({
+        price: -1,
+      });
+    }
+
+    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
+    data.total = await cursor.count();
+    data.result = await cursor.toArray();
+
+    return data;
   } catch (error) {
-      throw new Error(`Failed to query listings: ${error}`);
+    throw new Error(`Failed to query listings: ${error}`);
   }
 }
 
@@ -85,11 +110,11 @@ async function getListingHost(
   { db }: { db: Database }
 ): Promise<User> {
   const host = await db.users.findOne({
-      _id: listing.host,
+    _id: listing.host,
   });
 
   if (!host) {
-      throw new Error("Host can't be found");
+    throw new Error("Host can't be found");
   }
 
   return host;
@@ -105,27 +130,27 @@ async function getListingBookings(
   { db }: { db: Database }
 ): Promise<ListingBookingsData | null> {
   try {
-      if (!listing.authorized) {
-          return null;
-      }
+    if (!listing.authorized) {
+      return null;
+    }
 
-      const data: ListingBookingsData = {
-          total: 0,
-          result: [],
-      };
+    const data: ListingBookingsData = {
+      total: 0,
+      result: [],
+    };
 
-      let cursor = await db.bookings.find({
-          _id: { $in: listing.bookings },
-      });
+    let cursor = await db.bookings.find({
+      _id: { $in: listing.bookings },
+    });
 
-      cursor = cursor.skip(calculateSkip(page, limit));
-      cursor = cursor.limit(limit);
+    cursor = cursor.skip(calculateSkip(page, limit));
+    cursor = cursor.limit(limit);
 
-      data.total = await cursor.count();
-      data.result = await cursor.toArray();
+    data.total = await cursor.count();
+    data.result = await cursor.toArray();
 
-      return data;
+    return data;
   } catch (error) {
-      throw new Error(`Failed to query listing bookings: ${error}`);
+    throw new Error(`Failed to query listing bookings: ${error}`);
   }
 }

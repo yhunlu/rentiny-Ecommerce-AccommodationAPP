@@ -1,6 +1,5 @@
 import { google } from 'googleapis';
 import { Client, AddressComponent } from '@googlemaps/google-maps-services-js';
-import axios from 'axios';
 
 const oAuth2Client = new google.auth.OAuth2(
   `${process.env.GOOGLE_CLIENT_ID}`,
