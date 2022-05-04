@@ -46,7 +46,7 @@ const App = () => {
   const logInRef = useRef(logIn);
 
   useEffect(() => {
-    logInRef.current()
+    logInRef.current();
   }, []);
 
   if (!viewer.didRequest && !error) {
@@ -72,16 +72,21 @@ const App = () => {
           <AppHeader viewer={viewer} setViewer={setViewer} />
         </Affix>
         <Routes>
-          <Route
-            path="/login"
-            element={<Login setViewer={setViewer} />}
-          />
+          <Route path="/login" element={<Login setViewer={setViewer} />} />
           <Route path="/" element={<Home />} />
           <Route path="/host" element={<Host />} />
           <Route path="/listing/:listingId" element={<Listing />} />
-          <Route path="/listings" element={<Listings />} />
+          <Route
+            path="/listings"
+            element={<Listings title="Rentiny Listings" />}
+          >
+            <Route
+              path="/listings/:location"
+              element={<Listings title="Rentiny Listings" />}
+            />
+          </Route>
           <Route path="/user/:userId" element={<User viewer={viewer} />} />
-          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
     </Router>

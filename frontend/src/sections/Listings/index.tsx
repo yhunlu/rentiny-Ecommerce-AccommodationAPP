@@ -6,14 +6,14 @@ import { LISTINGS } from '../../lib/graphql/queries'
 import { Listings as ListingsData, ListingsVariables } from './../../lib/graphql/queries/Listings/__generated__/Listings';
 
 interface Props {
-
+  title: string;
 }
 
 const { Content } = Layout;
 
 const PAGE_LIMIT = 8;
 
-const Listings = (props: Props) => {
+const Listings = ({ title }: Props) => {
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
     variables: {
       filter: ListingsFilter.PRICE_LOW_TO_HIGH,
