@@ -29,6 +29,7 @@ export interface Listings {
 }
 
 export interface ListingsVariables {
+  location?: string | null;
   filter: ListingsFilter;
   limit: number;
   page: number;
