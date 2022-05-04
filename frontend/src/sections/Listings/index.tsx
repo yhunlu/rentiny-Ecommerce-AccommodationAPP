@@ -1,9 +1,13 @@
-import { useQuery } from '@apollo/client'
-import { Layout, List } from 'antd'
-import { ListingCard } from '../../lib/components'
+import { useQuery } from '@apollo/client';
+import { Layout, List } from 'antd';
+import { useParams } from 'react-router-dom';
+import { ListingCard } from '../../lib/components';
 import { ListingsFilter } from '../../lib/graphql/globalTypes';
-import { LISTINGS } from '../../lib/graphql/queries'
-import { Listings as ListingsData, ListingsVariables } from './../../lib/graphql/queries/Listings/__generated__/Listings';
+import { LISTINGS } from '../../lib/graphql/queries';
+import {
+  Listings as ListingsData,
+  ListingsVariables,
+} from './../../lib/graphql/queries/Listings/__generated__/Listings';
 
 interface Props {
   title: string;
@@ -14,13 +18,18 @@ const { Content } = Layout;
 const PAGE_LIMIT = 8;
 
 const Listings = ({ title }: Props) => {
-  const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
-    variables: {
-      filter: ListingsFilter.PRICE_LOW_TO_HIGH,
-      limit: PAGE_LIMIT,
-      page: 1,
-    },
-  });
+  const { location } = useParams();
+  const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(
+    LISTINGS,
+    {
+      variables: {
+        location: location ?? '',
+        filter: ListingsFilter.PRICE_LOW_TO_HIGH,
+        limit: PAGE_LIMIT,
+        page: 1,
+      },
+    }
+  );
 
   const listings = data ? data.listings : null;
 
@@ -42,9 +51,7 @@ const Listings = ({ title }: Props) => {
     />
   ) : null;
 
-  return (
-    <Content className="listings">{listingSectionElement}</Content>
-  )
-}
+  return <Content className="listings">{listingSectionElement}</Content>;
+};
 
-export default Listings
+export default Listings;
