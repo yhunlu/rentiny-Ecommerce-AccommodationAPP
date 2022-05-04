@@ -678,7 +678,7 @@ const users: User[] = [
     name: 'James J.',
     avatar:
       'https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560648533/mock/users/user-profile-1_mawp12.jpg',
-    contact: 'james@tinyhouse.com',
+    contact: 'james@rentiny.com',
     walletId: 'acct_************',
     income: 723796,
     bookings: [],
@@ -694,7 +694,7 @@ const users: User[] = [
     name: 'Elizabeth A.',
     avatar:
       'https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560649052/mock/users/user-profile-2_arwtdy.jpg',
-    contact: 'elizabeth@tinyhouse.com',
+    contact: 'elizabeth@rentiny.com',
     walletId: 'acct_************',
     income: 256144,
     bookings: [],
@@ -719,7 +719,7 @@ const users: User[] = [
     name: 'Andrew D.',
     avatar:
       'https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560649280/mock/users/user-profile-3_omxctk.jpg',
-    contact: 'andrew@tinyhouse.com',
+    contact: 'andrew@rentiny.com',
     walletId: 'acct_************',
     income: 272359,
     bookings: [],
@@ -742,7 +742,7 @@ const users: User[] = [
     name: 'Danielle C.',
     avatar:
       'https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560650165/mock/users/user-profile-4_wxi6om.jpg',
-    contact: 'danielle@tinyhouse.com',
+    contact: 'danielle@rentiny.com',
     walletId: 'acct_************',
     income: 465043,
     bookings: [],
@@ -758,7 +758,7 @@ const users: User[] = [
     name: 'Sarah K.',
     avatar:
       'https://res.cloudinary.com/tiny-house/image/upload/w_1000,ar_1:1,c_fill,g_auto/v1560650436/mock/users/user-profile-5_tm8hhl.jpg',
-    contact: 'sarah@tinyhouse.com',
+    contact: 'sarah@rentiny.com',
     walletId: 'acct_************',
     income: 104347,
     bookings: [],
