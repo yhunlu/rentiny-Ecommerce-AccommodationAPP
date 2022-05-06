@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Layout, List, Typography } from 'antd';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ListingCard } from '../../lib/components';
 import { ListingsFilter } from '../../lib/graphql/globalTypes';
@@ -19,13 +20,14 @@ const { Title, Paragraph, Text } = Typography;
 const PAGE_LIMIT = 8;
 
 const Listings = ({ title }: Props) => {
+  const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
   const { location } = useParams();
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
     {
       variables: {
         location: location ?? null,
-        filter: ListingsFilter.PRICE_LOW_TO_HIGH,
+        filter,
         limit: PAGE_LIMIT,
         page: 1,
       },
