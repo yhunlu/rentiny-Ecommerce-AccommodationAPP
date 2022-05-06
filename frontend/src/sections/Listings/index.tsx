@@ -9,6 +9,7 @@ import {
   Listings as ListingsData,
   ListingsVariables,
 } from './../../lib/graphql/queries/Listings/__generated__/Listings';
+import { ListingsFilters } from './component';
 
 interface Props {
   title: string;

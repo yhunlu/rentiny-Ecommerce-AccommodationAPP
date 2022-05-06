@@ -1,1 +1,1 @@
-import { default as ListingsFilters } from './ListingsFilters';
+export { default as ListingsFilters } from './ListingsFilters';
