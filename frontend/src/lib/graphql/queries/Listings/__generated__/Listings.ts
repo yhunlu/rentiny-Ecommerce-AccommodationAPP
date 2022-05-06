@@ -21,6 +21,7 @@ export interface Listings_listings_result {
 
 export interface Listings_listings {
   __typename: "Listings";
+  region: string;
   result: Listings_listings_result[];
 }
 

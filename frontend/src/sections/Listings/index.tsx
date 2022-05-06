@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Layout, List } from 'antd';
-import { useParams } from 'react-router-dom';
+import { Layout, List, Typography } from 'antd';
+import { Link, useParams } from 'react-router-dom';
 import { ListingCard } from '../../lib/components';
 import { ListingsFilter } from '../../lib/graphql/globalTypes';
 import { LISTINGS } from '../../lib/graphql/queries';
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const { Content } = Layout;
+const { Title, Paragraph, Text } = Typography;
 
 const PAGE_LIMIT = 8;
 
@@ -23,7 +24,7 @@ const Listings = ({ title }: Props) => {
     LISTINGS,
     {
       variables: {
-        location: location ?? '',
+        location: location ?? null,
         filter: ListingsFilter.PRICE_LOW_TO_HIGH,
         limit: PAGE_LIMIT,
         page: 1,
@@ -32,26 +33,50 @@ const Listings = ({ title }: Props) => {
   );
 
   const listings = data ? data.listings : null;
+  const listingsRegion = listings ? listings.region : null;
 
-  const listingSectionElement = listings ? (
-    <List
-      grid={{
-        gutter: 8,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-      }}
-      dataSource={listings.result}
-      renderItem={(listing) => (
-        <List.Item>
-          <ListingCard listing={listing} />
-        </List.Item>
-      )}
-    />
+  const listingSectionElement =
+    listings && listings.result.length ? (
+      <List
+        grid={{
+          gutter: 8,
+          xs: 1,
+          sm: 2,
+          md: 3,
+          lg: 4,
+        }}
+        dataSource={listings.result}
+        renderItem={(listing) => (
+          <List.Item>
+            <ListingCard listing={listing} />
+          </List.Item>
+        )}
+      />
+    ) : (
+      <div>
+        <Paragraph>
+          It appears that no listings have been created in this area{' '}
+          <Text mark>"{listingsRegion}"</Text> yet.
+        </Paragraph>
+        <Paragraph>
+          Be the first person to create a{' '}
+          <Link to="/host">listing in this area</Link>!
+        </Paragraph>
+      </div>
+    );
+
+  const listingsRegionElement = listingsRegion ? (
+    <Title level={3} className="listings__title">
+      Results for "{listingsRegion}"
+    </Title>
   ) : null;
 
-  return <Content className="listings">{listingSectionElement}</Content>;
+  return (
+    <Content className="listings">
+      {listingsRegionElement}
+      {listingSectionElement}
+    </Content>
+  );
 };
 
 export default Listings;
