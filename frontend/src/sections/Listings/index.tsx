@@ -9,7 +9,7 @@ import {
   Listings as ListingsData,
   ListingsVariables,
 } from './../../lib/graphql/queries/Listings/__generated__/Listings';
-import { ListingsFilters } from './component';
+import { ListingsFilters } from './components';
 
 interface Props {
   title: string;
@@ -40,21 +40,24 @@ const Listings = ({ title }: Props) => {
 
   const listingSectionElement =
     listings && listings.result.length ? (
-      <List
-        grid={{
-          gutter: 8,
-          xs: 1,
-          sm: 2,
-          md: 3,
-          lg: 4,
-        }}
-        dataSource={listings.result}
-        renderItem={(listing) => (
-          <List.Item>
-            <ListingCard listing={listing} />
-          </List.Item>
-        )}
-      />
+      <div>
+        <ListingsFilters filter={filter} setFilter={setFilter} />
+        <List
+          grid={{
+            gutter: 8,
+            xs: 1,
+            sm: 2,
+            md: 3,
+            lg: 4,
+          }}
+          dataSource={listings.result}
+          renderItem={(listing) => (
+            <List.Item>
+              <ListingCard listing={listing} />
+            </List.Item>
+          )}
+        />
+      </div>
     ) : (
       <div>
         <Paragraph>

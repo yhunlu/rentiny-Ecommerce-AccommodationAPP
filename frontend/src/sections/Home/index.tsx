@@ -20,7 +20,7 @@ import { LISTINGS } from '../../lib/graphql/queries';
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 8;
 const PAGE_NUMBER = 1;
 
 const Home = () => {

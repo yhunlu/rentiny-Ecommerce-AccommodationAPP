@@ -11,27 +11,28 @@ interface Props {
 const { Title } = Typography;
 
 const HomeListings = ({ title, listings }: Props) => {
-  return (
-    <div>
-        <Title level={4} className="home-listings__title">
-            {title}
-        </Title>
-        <List
-            grid={{
-                gutter: 8,
-                xs: 1,
-                sm: 2,
-                lg: 4,
-            }}
-            dataSource={listings}
-            renderItem={(listing) => (
-                <List.Item>
-                    <ListingCard listing={listing} />
-                </List.Item>
-            )}
-        />
-    </div>
-  )
+    return (
+        <div>
+            <Title level={4} className="home-listings__title">
+                {title}
+            </Title>
+            <List
+                grid={{
+                    gutter: 8,
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 4,
+                }}
+                dataSource={listings}
+                renderItem={(listing) => (
+                    <List.Item>
+                        <ListingCard listing={listing} />
+                    </List.Item>
+                )}
+            />
+        </div>
+    )
 }
 
 export default HomeListings
