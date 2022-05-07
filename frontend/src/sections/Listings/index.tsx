@@ -22,6 +22,8 @@ const PAGE_LIMIT = 8;
 
 const Listings = ({ title }: Props) => {
   const [filter, setFilter] = useState(ListingsFilter.PRICE_LOW_TO_HIGH);
+  const [page, setPage] = useState(1);
+
   const { location } = useParams();
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
@@ -30,7 +32,7 @@ const Listings = ({ title }: Props) => {
         location: location ?? null,
         filter,
         limit: PAGE_LIMIT,
-        page: 1,
+        page,
       },
     }
   );
