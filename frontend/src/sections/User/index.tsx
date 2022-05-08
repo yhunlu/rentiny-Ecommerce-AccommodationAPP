@@ -14,7 +14,7 @@ interface UserProps {
   viewer: Viewer;
 }
 
-const PAGE_LIMIT = 10;
+const PAGE_LIMIT = 6;
 const { Content } = Layout;
 
 const User = ({ viewer }: UserProps) => {

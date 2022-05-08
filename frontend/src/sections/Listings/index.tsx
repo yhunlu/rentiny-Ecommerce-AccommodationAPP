@@ -9,7 +9,7 @@ import {
   Listings as ListingsData,
   ListingsVariables,
 } from './../../lib/graphql/queries/Listings/__generated__/Listings';
-import { ListingsFilters } from './components';
+import { ListingsFilters, ListingsPagination } from './components';
 
 interface Props {
   title: string;
@@ -36,13 +36,19 @@ const Listings = ({ title }: Props) => {
       },
     }
   );
-
+  
   const listings = data ? data.listings : null;
   const listingsRegion = listings ? listings.region : null;
 
   const listingSectionElement =
     listings && listings.result.length ? (
       <div>
+        <ListingsPagination
+          total={listings.total}
+          page={page}
+          limit={PAGE_LIMIT}
+          setPage={setPage}
+        />
         <ListingsFilters filter={filter} setFilter={setFilter} />
         <List
           grid={{

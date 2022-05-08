@@ -95,9 +95,10 @@ async function listingsQuery(
       });
     }
 
-    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.total = await cursor.count();
+    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.result = await cursor.toArray();
+    
 
     return data;
   } catch (error) {

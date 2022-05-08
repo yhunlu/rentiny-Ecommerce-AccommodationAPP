@@ -44,8 +44,8 @@ async function getUserListings(
       _id: { $in: user.listings },
     });
 
-    cursor = cursor.skip(calculateSkip(page, limit));
-    cursor = cursor.limit(limit);
+    cursor = cursor.skip(calculateSkip(page, data.total));
+    cursor = cursor.limit(data.total);
 
     data.total = await cursor.count();
     data.result = await cursor.toArray();
