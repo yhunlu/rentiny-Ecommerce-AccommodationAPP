@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Layout, List, Typography } from 'antd';
+import { Affix, Layout, List, Typography } from 'antd';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ListingCard } from '../../lib/components';
@@ -36,20 +36,22 @@ const Listings = ({ title }: Props) => {
       },
     }
   );
-  
+
   const listings = data ? data.listings : null;
   const listingsRegion = listings ? listings.region : null;
 
   const listingSectionElement =
     listings && listings.result.length ? (
       <div>
-        <ListingsPagination
-          total={listings.total}
-          page={page}
-          limit={PAGE_LIMIT}
-          setPage={setPage}
-        />
-        <ListingsFilters filter={filter} setFilter={setFilter} />
+        <Affix offsetTop={64}>
+          <ListingsPagination
+            total={listings.total}
+            page={page}
+            limit={PAGE_LIMIT}
+            setPage={setPage}
+          />
+          <ListingsFilters filter={filter} setFilter={setFilter} />
+        </Affix>
         <List
           grid={{
             gutter: 8,
