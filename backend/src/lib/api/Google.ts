@@ -63,7 +63,7 @@ export const Google = {
         address,
         key: `${process.env.GOOGLE_MAPS_API_KEY}`,
       },
-      timeout: 1000, // milliseconds
+      timeout: 2000, // milliseconds
     });
 
     if (res.status < 200 || res.status > 299) {

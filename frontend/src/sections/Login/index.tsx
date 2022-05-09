@@ -39,6 +39,7 @@ const Login = ({ setViewer }: Props) => {
     });
 
   const logInRef = useRef(logIn);
+  
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
