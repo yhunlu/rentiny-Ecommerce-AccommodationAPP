@@ -2,14 +2,18 @@ import { useQuery } from '@apollo/client';
 import { Affix, Layout, List, Typography } from 'antd';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ListingCard } from '../../lib/components';
+import { ErrorBanner, ListingCard } from '../../lib/components';
 import { ListingsFilter } from '../../lib/graphql/globalTypes';
 import { LISTINGS } from '../../lib/graphql/queries';
 import {
   Listings as ListingsData,
   ListingsVariables,
 } from './../../lib/graphql/queries/Listings/__generated__/Listings';
-import { ListingsFilters, ListingsPagination } from './components';
+import {
+  ListingsFilters,
+  ListingsPagination,
+  ListingsSkeleton,
+} from './components';
 
 interface Props {
   title: string;
@@ -36,6 +40,23 @@ const Listings = ({ title }: Props) => {
       },
     }
   );
+
+  if (loading) {
+    return (
+      <Content className="listings">
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content className="listings">
+        <ErrorBanner description="We either couldn't find anything matching your search or have encountered an error. If you're searching for a unique location, try searching again with more common keywords." />
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
 
   const listings = data ? data.listings : null;
   const listingsRegion = listings ? listings.region : null;

@@ -5,7 +5,7 @@ import listingLoadingCardCover from '../../assets/listing-loading-card-cover.jpg
 
 const ListingsSkeleton = () => {
 
-    // grepper example of listingsSkeleton in Typescript/ant design "antd"
+    //grepper Typescript listings-Skeleton in ant-design.
     const emptyData = [{}, {}, {}, {}, {}, {}, {}, {}];
 
     return (
@@ -37,7 +37,7 @@ const ListingsSkeleton = () => {
             />
         </div>
     );
-    // end grepper
+    //end grepper
 };
 
 export default ListingsSkeleton;
