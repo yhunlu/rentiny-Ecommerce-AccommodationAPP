@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Affix, Layout, List, Typography } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorBanner, ListingCard } from '../../lib/components';
 import { ListingsFilter } from '../../lib/graphql/globalTypes';
@@ -29,9 +29,12 @@ const Listings = ({ title }: Props) => {
   const [page, setPage] = useState(1);
 
   const { location } = useParams();
+  const locationRef = useRef(location);
+
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(
     LISTINGS,
     {
+      skip: locationRef.current !== location && page !== 1,
       variables: {
         location: location ?? null,
         filter,
@@ -40,6 +43,11 @@ const Listings = ({ title }: Props) => {
       },
     }
   );
+
+  useEffect(() => {
+    setPage(1);
+    locationRef.current = location;
+  }, [location]);
 
   if (loading) {
     return (
