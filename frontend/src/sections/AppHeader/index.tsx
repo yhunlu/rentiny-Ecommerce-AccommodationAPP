@@ -1,6 +1,6 @@
 import { Input, Layout } from 'antd';
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import logo from './assets/rentiny-logo.png';
 import { MenuItems } from './components';
@@ -16,15 +16,35 @@ const { Header } = Layout;
 const { Search } = Input;
 
 const AppHeader = ({ viewer, setViewer }: Props) => {
+    const [search, setSearch] = useState('');
+
     const navigate = useNavigate();
+    const location = useLocation();
+
     const onSearch = (value: string) => {
-            const trimmedValue = value.trim();
-            if (trimmedValue) {
-                navigate(`/listings/${trimmedValue}`);
-            } else {
-                displayErrorMessage('Please enter a valid search term');
-            }
-    }
+        const trimmedValue = value.trim();
+        if (trimmedValue) {
+            navigate(`/listings/${trimmedValue}`);
+        } else {
+            displayErrorMessage('Please enter a valid search term');
+        }
+    };
+
+    useEffect(() => {
+        const { pathname } = location;
+        const pathnameSubStrings = pathname.split('/');
+
+        if (!pathname.includes('/listings')) {
+            setSearch('');
+            return;
+        }
+
+        if (pathname.includes('/listings') && pathnameSubStrings.length === 3) {
+            setSearch(pathnameSubStrings[2].replace("%20", " "));
+            return;
+        }
+    }, [location]);
+
     return (
         <Header className="app-header">
             <div className="app-header__logo-search-section">
@@ -35,15 +55,16 @@ const AppHeader = ({ viewer, setViewer }: Props) => {
                 </div>
                 <div className="app-header__search-input">
                     <Search
-                        placeholder="Search"
+                        placeholder="Search a place you'll love to stay at"
                         enterButton
-                        onSearch={onSearch
-                        }
+                        value={search}
+                        onChange={(evt) => setSearch(evt.target.value)}
+                        onSearch={onSearch}
                     />
                 </div>
             </div>
             <div className="app-header__menu-section">
-                <MenuItems viewer={viewer} setViewer={setViewer}/>
+                <MenuItems viewer={viewer} setViewer={setViewer} />
             </div>
         </Header>
     );
