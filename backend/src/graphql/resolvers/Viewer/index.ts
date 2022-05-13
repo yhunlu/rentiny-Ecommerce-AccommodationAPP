@@ -162,6 +162,12 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to log user out: ${error}`);
       }
     },
+    connectStripe: (): Viewer => {
+      return { didRequest: true };
+    },
+    disconnectStripe: (): Viewer => {
+      return { didRequest: true };
+    }
   },
   Viewer: {
     id: (viewer: Viewer): string | undefined => {
