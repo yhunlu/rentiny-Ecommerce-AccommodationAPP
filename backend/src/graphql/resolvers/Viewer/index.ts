@@ -1,9 +1,10 @@
 import crypto from 'crypto';
 import { IResolvers } from '@graphql-tools/utils';
-import { Google } from '../../../lib/api';
+import { Google, Stripe } from '../../../lib/api';
 import { Viewer, Database, User } from './../../../lib/types';
-import { LogInArgs } from './types';
+import { ConnectStripeArgs, LogInArgs } from './types';
 import { Response, Request } from 'express';
+import { authorize } from '../../../lib/utils';
 
 const cookieOptions = {
   httpOnly: true,
@@ -65,22 +66,24 @@ const LogInViaGoogle = async (
         token,
       },
     },
-    { upsert: false }
+    { returnDocument: 'after' }
   );
 
-  const viewer = updateRes.value;
+  let viewer = updateRes.value;
 
   if (!viewer) {
-    await db.users.insertOne({
+    const inserRes = await db.users.insertOne({
       _id: userId,
-      token,
       name: userName,
       avatar: userAvatar,
       contact: userEmail,
-      income: 0,
+      token: token,
       bookings: [],
+      income: 0,
       listings: [],
     });
+
+    viewer = await db.users.findOne({ _id: inserRes.insertedId });
   }
 
   // Set cookie
@@ -162,12 +165,51 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to log user out: ${error}`);
       }
     },
-    connectStripe: (): Viewer => {
-      return { didRequest: true };
+    connectStripe: async (
+      _root: undefined,
+      { input }: ConnectStripeArgs,
+      { db, req }: { db: Database; req: Request }
+    ): Promise<Viewer | void> => {
+      try {
+        const { code } = input;
+
+        let viewer = await authorize(db, req);
+
+        if (!viewer) {
+          throw new Error('viewer cannot be found');
+        }
+
+        const wallet = await Stripe.connect(code);
+        if (!wallet) {
+          throw new Error('stripe grant error');
+        }
+
+        const updateRes = await db.users.findOneAndUpdate(
+          { _id: viewer._id },
+          { $set: { walletId: wallet.stripe_user_id } },
+          { returnDocument: 'after' }
+        );
+
+        if (!updateRes.value) {
+          throw new Error('viewer cannot be updated');
+        }
+
+        viewer = updateRes.value;
+
+        return {
+          _id: viewer._id,
+          token: viewer.token,
+          avatar: viewer.avatar,
+          walletId: viewer.walletId,
+          didRequest: true,
+        };
+      } catch (error) {
+        throw new Error(`Failed to connect with Stripe: ${error}`);
+      }
     },
     disconnectStripe: (): Viewer => {
       return { didRequest: true };
-    }
+    },
   },
   Viewer: {
     id: (viewer: Viewer): string | undefined => {

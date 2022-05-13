@@ -14,10 +14,6 @@ export const Stripe = {
       code,
     });
 
-    if (!response) {
-      return new Error('Stripe connect error');
-    }
-
     return response;
   },
 };
