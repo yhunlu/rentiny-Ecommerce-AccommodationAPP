@@ -165,6 +165,7 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to log user out: ${error}`);
       }
     },
+    //grepper typescript - connect stripe resolver
     connectStripe: async (
       _root: undefined,
       { input }: ConnectStripeArgs,
@@ -207,8 +208,41 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to connect with Stripe: ${error}`);
       }
     },
-    disconnectStripe: (): Viewer => {
-      return { didRequest: true };
+    //end grepper
+    disconnectStripe: async (
+      _root: undefined,
+      _args,
+      { db, req }: { db: Database; req: Request }
+    ): Promise<Viewer | void> => {
+      try {
+        let viewer = await authorize(db, req);
+
+        if (!viewer) {
+          throw new Error('viewer cannot be found');
+        }
+
+        const updateRes = await db.users.findOneAndUpdate(
+          { _id: viewer._id },
+          { $set: { walletId: null } },
+          { returnDocument: 'after' }
+        );
+
+        if (!updateRes.value) {
+          throw new Error('viewer cannot be updated');
+        }
+
+        viewer = updateRes.value;
+
+        return {
+          _id: viewer._id,
+          token: viewer.token,
+          avatar: viewer.avatar,
+          walletId: viewer.walletId,
+          didRequest: true,
+        };
+      } catch (error) {
+        throw new Error(`Failed to disconnect with Stripe: ${error}`);
+      }
     },
   },
   Viewer: {

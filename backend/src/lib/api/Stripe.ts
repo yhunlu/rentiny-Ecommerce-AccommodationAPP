@@ -1,12 +1,12 @@
 import stripe from 'stripe';
 
-// grepper typescript initialize stripe connection
+//grepper typescript initialize stripe connection
 const client = new stripe(`${process.env.STRIPE_SECRET_KEY}`, {
   apiVersion: '2020-08-27',
 });
-// end grepper
+//end grepper
 
-// grepper typescript connect stripe with OAuth
+//grepper typescript connect stripe with OAuth
 export const Stripe = {
   connect: async (code: string) => {
     const response = await client.oauth.token({
@@ -17,4 +17,4 @@ export const Stripe = {
     return response;
   },
 };
-// end grepper
+//end grepper
