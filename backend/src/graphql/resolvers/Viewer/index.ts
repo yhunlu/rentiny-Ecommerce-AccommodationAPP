@@ -165,7 +165,7 @@ export const viewerResolvers: IResolvers = {
         throw new Error(`Failed to log user out: ${error}`);
       }
     },
-    //grepper typescript - connect stripe resolver
+    //grepper Typescript - connect stripe resolver
     connectStripe: async (
       _root: undefined,
       { input }: ConnectStripeArgs,
