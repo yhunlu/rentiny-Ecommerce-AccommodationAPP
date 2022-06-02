@@ -1,5 +1,4 @@
 import { Avatar, Button, Card, Divider, Typography } from 'antd';
-import React from 'react'
 import { User as UserData } from './../../../../lib/graphql/queries/User/__generated__/User';
 
 interface Props {
@@ -7,9 +6,13 @@ interface Props {
     viewerIsUser: boolean;
 }
 
+const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_LndJ7chnMtnlb51VtNaWkdxsNgLQ6Fpy&scope=read_write`;
 const { Paragraph, Text, Title } = Typography;
 
 const UserProfile = ({ user, viewerIsUser }: Props) => {
+    const redirectToStripe = () => {
+        window.location.href = stripeAuthUrl;
+    };
 
     const additionalDetailsSection = viewerIsUser ? (
         <>
@@ -21,7 +24,7 @@ const UserProfile = ({ user, viewerIsUser }: Props) => {
                 <Paragraph>
                     Interested in becoming a Rentiny Host? Register with your Stripe account!
                 </Paragraph>
-                <Button type="primary" className="user-profile__details-cta">
+                <Button type="primary" className="user-profile__details-cta" onClick={redirectToStripe}>
                     Connect with Stripe
                 </Button>
                 <Paragraph type="secondary">
