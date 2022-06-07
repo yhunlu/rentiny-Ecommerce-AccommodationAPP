@@ -9,6 +9,7 @@ import {
   User,
   Login,
   AppHeader,
+  Stripe,
 } from './sections';
 import { Viewer } from './lib/types';
 import { useEffect, useRef, useState } from 'react';
@@ -73,6 +74,10 @@ const App = () => {
         </Affix>
         <Routes>
           <Route path="/login" element={<Login setViewer={setViewer} />} />
+          <Route
+            path="/stripe"
+            element={<Stripe viewer={viewer} setViewer={setViewer} />}
+          />
           <Route path="/" element={<Home />} />
           <Route path="/host" element={<Host />} />
           <Route path="/listing/:listingId" element={<Listing />} />
