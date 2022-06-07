@@ -19,5 +19,5 @@ export interface ConnectStripe {
 }
 
 export interface ConnectStripeVariables {
-  input?: ConnectStripeInput | null;
+  input: ConnectStripeInput;
 }
