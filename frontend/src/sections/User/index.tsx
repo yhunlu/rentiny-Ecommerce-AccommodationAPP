@@ -12,25 +12,35 @@ import { UserBookings, UserListings, UserProfile } from './components';
 import { ErrorBanner, PageSkeleton } from '../../lib/components';
 interface UserProps {
   viewer: Viewer;
+  setViewer: (viewer: Viewer) => void;
 }
 
 const PAGE_LIMIT = 6;
 const { Content } = Layout;
 
-const User = ({ viewer }: UserProps) => {
+const User = ({ viewer, setViewer }: UserProps) => {
   const [listingsPage, setListingsPage] = useState(1);
   const [bookingsPage, setBookingsPage] = useState(1);
   const { userId } = useParams();
-  const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
-    variables: {
-      id: userId ?? '',
-      bookingsPage: bookingsPage,
-      listingsPage: listingsPage,
-      limit: PAGE_LIMIT,
-    },
-  });
+  const { data, loading, error, refetch } = useQuery<UserData, UserVariables>(
+    USER,
+    {
+      variables: {
+        id: userId ?? '',
+        bookingsPage: bookingsPage,
+        listingsPage: listingsPage,
+        limit: PAGE_LIMIT,
+      },
+    }
+  );
 
-  const stripeError = new URL(window.location.href).searchParams.get("stripe_error");
+  const handleUserRefetch = async () => {
+    await refetch();
+  };
+
+  const stripeError = new URL(window.location.href).searchParams.get(
+    'stripe_error'
+  );
   const stripeErrorBanner = stripeError ? (
     <ErrorBanner description="We had an issue connectiong with Stripe. Please try again soon." />
   ) : null;
@@ -59,7 +69,13 @@ const User = ({ viewer }: UserProps) => {
   const userBookings = user?.bookings ?? null;
 
   const userProfileElement = user ? (
-    <UserProfile user={user} viewerIsUser={viewerIsUser} />
+    <UserProfile
+      user={user}
+      viewer={viewer}
+      viewerIsUser={viewerIsUser}
+      setViewer={setViewer}
+      handleUserRefetch={handleUserRefetch}
+    />
   ) : null;
 
   const userListingsElement = userListings ? (

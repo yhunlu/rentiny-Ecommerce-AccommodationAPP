@@ -90,7 +90,7 @@ const App = () => {
               element={<Listings title="Rentiny Listings" />}
             />
           </Route>
-          <Route path="/user/:userId" element={<User viewer={viewer} />} />
+          <Route path="/user/:userId" element={<User viewer={viewer} setViewer={setViewer} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>
