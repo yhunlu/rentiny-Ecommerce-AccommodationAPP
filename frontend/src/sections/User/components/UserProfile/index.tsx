@@ -21,6 +21,7 @@ const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=
 const { Paragraph, Text, Title } = Typography;
 
 const UserProfile = ({ user, viewer, viewerIsUser, setViewer, handleUserRefetch }: Props) => {
+  
   const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(
     DISCONNECT_STRIPE,
     {

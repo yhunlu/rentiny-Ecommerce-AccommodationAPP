@@ -20,6 +20,11 @@ export const listingResolvers: IResolvers = {
     listing: listingQuery,
     listings: listingsQuery,
   },
+  Mutation: {
+    hostListing: () => {
+      return "Mutation.hostListing not implemented";
+    }
+  },
   Listing: {
     id: getListingId,
     host: getListingHost,
