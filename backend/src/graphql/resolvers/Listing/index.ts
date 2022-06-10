@@ -1,5 +1,5 @@
 import { IResolvers } from '@graphql-tools/utils';
-import { Listing, Database, User } from './../../../lib/types';
+import { Listing, Database, User, ListingType } from './../../../lib/types';
 import { ObjectId } from 'mongodb';
 import { authorize } from '../../../lib/utils';
 import { Request } from 'express';
@@ -12,8 +12,33 @@ import {
   ListingsData,
   ListingsFilter,
   ListingsQuery,
+  HostListingInput,
+  HostListingArgs,
 } from './types';
 import { Google } from '../../../lib/api';
+
+const verifyHostListingInput = ({
+  title,
+  description,
+  type,
+  price,
+}: HostListingInput) => {
+  if (title.length > 100) {
+    throw new Error('Listing title must be under 100 characters');
+  }
+
+  if (description.length > 5000) {
+    throw new Error('Listing description must be under 5000 characters');
+  }
+
+  if (type !== ListingType.Apartment && type !== ListingType.House) {
+    throw new Error('Listing type must be either an apartment or house');
+  }
+
+  if (price < 0) {
+    throw new Error('Price must be greater than 0');
+  }
+};
 
 export const listingResolvers: IResolvers = {
   Query: {
@@ -21,9 +46,49 @@ export const listingResolvers: IResolvers = {
     listings: listingsQuery,
   },
   Mutation: {
-    hostListing: () => {
-      return "Mutation.hostListing not implemented";
-    }
+    hostListing: async (
+      _root: undefined,
+      { input }: HostListingArgs,
+      { db, req }: { db: Database; req: Request }
+    ): Promise<Listing> => {
+      verifyHostListingInput(input);
+
+      const viewer = await authorize(db, req);
+      if (!viewer) {
+        throw new Error('viewer cannot be found');
+      }
+
+      const { country, admin, city } = await Google.geocode(input.address);
+      if (!country || !admin || !city) {
+        throw new Error('invalid address input');
+      }
+
+      const listing: Listing = {
+        _id: new ObjectId(),
+        ...input,
+        bookings: [],
+        bookingsIndex: {},
+        country,
+        admin,
+        city,
+        host: viewer._id,
+      };
+
+      await db.listings.insertOne(listing);
+
+      await db.users.updateOne(
+        {
+          _id: viewer._id,
+        },
+        {
+          $push: {
+            listings: listing._id,
+          },
+        }
+      );
+
+      return listing;
+    },
   },
   Listing: {
     id: getListingId,
@@ -103,7 +168,6 @@ async function listingsQuery(
     data.total = await cursor.count();
     cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.result = await cursor.toArray();
-    
 
     return data;
   } catch (error) {
