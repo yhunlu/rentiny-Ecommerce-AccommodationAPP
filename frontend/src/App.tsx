@@ -79,7 +79,7 @@ const App = () => {
             element={<Stripe viewer={viewer} setViewer={setViewer} />}
           />
           <Route path="/" element={<Home />} />
-          <Route path="/host" element={<Host />} />
+          <Route path="/host" element={<Host viewer={viewer} />} />
           <Route path="/listing/:listingId" element={<Listing />} />
           <Route
             path="/listings"
