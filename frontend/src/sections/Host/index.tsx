@@ -142,25 +142,26 @@ const Host = ({ viewer }: Props) => {
 
         <Item
           label="Image"
-          extra="Images have to be under 2MB in size and of type JPG or PNG"
+          extra="Images have to be under 2MB in size and of type JPEG or PNG"
         >
           <div className="host__form-image-upload">
             <Upload
               name="image"
               listType="picture-card"
+              className="avatar-uploader"
               showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              action="//www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeImageUpload}
               onChange={handleImageUpload}
             >
               {imageBase64Value ? (
-                <img src={imageBase64Value} alt="Listing" />  
-                ) : (
-                  <div>
-                    {imageLoading ? <LoadingOutlined /> : <CloudUploadOutlined />}
-                    <div className="ant-upload-text">Upload</div>
-                  </div>
-                )
+                <img src={imageBase64Value} alt="Listing" />
+              ) : (
+                <div>
+                  {imageLoading ? <LoadingOutlined /> : <CloudUploadOutlined />}
+                  <div className="ant-upload-text">Upload</div>
+                </div>
+              )
               }
             </Upload>
           </div>

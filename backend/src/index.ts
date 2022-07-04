@@ -5,6 +5,7 @@ import { ApolloServer } from 'apollo-server-express';
 import express, { Application } from 'express';
 import { connectDatabase } from './database';
 import { resolvers, typeDefs } from './graphql';
+import cors from 'cors';
 
 const PORT = process.env.PORT || 5000;
 
@@ -13,6 +14,12 @@ const mount = async (app: Application) => {
     const db = await connectDatabase();
 
     app.use(cookieParser(process.env.COOKIE_SECRET));
+    app.use((req, res, next) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      next();
+    });
+
+    app.use(cors());
 
     const server = new ApolloServer({
       typeDefs,
