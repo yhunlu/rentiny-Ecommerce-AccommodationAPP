@@ -1,4 +1,5 @@
 import {
+  Button,
   Form,
   Input,
   InputNumber,
@@ -148,14 +149,13 @@ const Host = ({ viewer }: Props) => {
             <Upload
               name="image"
               listType="picture-card"
-              className="avatar-uploader"
               showUploadList={false}
               action="//www.mocky.io/v2/5cc8019d300000980a055e76"
               beforeUpload={beforeImageUpload}
               onChange={handleImageUpload}
             >
               {imageBase64Value ? (
-                <img src={imageBase64Value} alt="Listing" />
+                <img src={imageBase64Value} alt="Listing" style={{ width: '100%' }} />
               ) : (
                 <div>
                   {imageLoading ? <LoadingOutlined /> : <CloudUploadOutlined />}
@@ -170,6 +170,11 @@ const Host = ({ viewer }: Props) => {
         <Item label="Price" extra="All prices in $USD/day">
           <InputNumber min={0} placeholder="120" />
         </Item>
+
+        <Item>
+          <Button type="primary">Submit</Button>
+        </Item>
+
       </Form>
     </Content>
   );
