@@ -12,7 +12,12 @@ import { UploadChangeParam } from 'antd/lib/upload';
 import { Viewer } from '../../lib/types';
 import { Link } from 'react-router-dom';
 import { ListingType } from '../../lib/graphql/globalTypes';
-import { BankTwoTone, CloudUploadOutlined, HomeTwoTone, LoadingOutlined } from '@ant-design/icons';
+import {
+  BankTwoTone,
+  CloudUploadOutlined,
+  HomeTwoTone,
+  LoadingOutlined,
+} from '@ant-design/icons';
 import { displayErrorMessage } from '../../lib/utils';
 import { useState } from 'react';
 
@@ -64,7 +69,7 @@ const Host = ({ viewer }: Props) => {
     }
 
     if (file.status === 'done' && file.originFileObj) {
-      getBase64Value(file.originFileObj, imageBase64Value => {
+      getBase64Value(file.originFileObj, (imageBase64Value) => {
         setImageBase64Value(imageBase64Value);
         setImageLoading(false);
       });
@@ -103,7 +108,11 @@ const Host = ({ viewer }: Props) => {
           </Text>
         </div>
 
-        <Item label="Accommodation Type">
+        <Item
+          label="Accommodation Type"
+          name="type"
+          rules={[{ required: true, message: 'Please select a home type!' }]}
+        >
           <Radio.Group>
             <Radio.Button value={ListingType.APARTMENT}>
               <BankTwoTone /> <span>Apartment</span>
@@ -114,14 +123,47 @@ const Host = ({ viewer }: Props) => {
           </Radio.Group>
         </Item>
 
-        <Item label="Title" extra="Max character count of 45">
+        <Item
+          label="Max # of Guests"
+          name="numOfGuests"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a maximum number of guests!',
+            },
+          ]}
+        >
+          <InputNumber min={1} placeholder="4" />
+        </Item>
+
+        <Item
+          label="Title"
+          extra="Max character count of 45"
+          name="title"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a title for your listing!',
+            },
+          ]}
+        >
           <Input
             maxLength={45}
             placeholder="The iconic and luxurious Bel-Air mansion"
           />
         </Item>
 
-        <Item label="Description of listing" extra="Max character count of 400">
+        <Item
+          label="Description of listing"
+          extra="Max character count of 400"
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a description for your listing!',
+            },
+          ]}
+        >
           <Input.TextArea
             rows={3}
             maxLength={400}
@@ -129,21 +171,68 @@ const Host = ({ viewer }: Props) => {
           />
         </Item>
 
-        <Item label="City/Town">
+        <Item
+          label="Address"
+          name="address"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter an address for your listing!',
+            },
+          ]}
+        >
+          <Input placeholder="251 North Bristol Avenue" />
+        </Item>
+
+        <Item
+          label="City/Town"
+          name="city"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a city or town for your listing!',
+            },
+          ]}
+        >
           <Input placeholder="Los Angeles" />
         </Item>
 
-        <Item label="State/Province">
+        <Item
+          label="State/Province"
+          name="state"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a state or province for your listing!',
+            },
+          ]}
+        >
           <Input placeholder="California" />
         </Item>
 
-        <Item label="Zip/Postal Code">
+        <Item
+          label="Zip/Postal Code"
+          name="zip"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a zip or postal code for your listing!',
+            },
+          ]}
+        >
           <Input placeholder="Please enter a zip code for your listing!" />
         </Item>
 
         <Item
           label="Image"
           extra="Images have to be under 2MB in size and of type JPEG or PNG"
+          name="image"
+          rules={[
+            {
+              required: true,
+              message: 'Please upload an image for your listing!',
+            },
+          ]}
         >
           <div className="host__form-image-upload">
             <Upload
@@ -155,26 +244,35 @@ const Host = ({ viewer }: Props) => {
               onChange={handleImageUpload}
             >
               {imageBase64Value ? (
-                <img src={imageBase64Value} alt="Listing" style={{ width: '100%' }} />
+                <img
+                  src={imageBase64Value}
+                  alt="Listing"
+                  style={{ width: '100%' }}
+                />
               ) : (
                 <div>
                   {imageLoading ? <LoadingOutlined /> : <CloudUploadOutlined />}
                   <div className="ant-upload-text">Upload</div>
                 </div>
-              )
-              }
+              )}
             </Upload>
           </div>
         </Item>
 
-        <Item label="Price" extra="All prices in $USD/day">
+        <Item label="Price" extra="All prices in $USD/day" name="price"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a price for your listing!',
+            },
+          ]}
+        >
           <InputNumber min={0} placeholder="120" />
         </Item>
 
         <Item>
           <Button type="primary">Submit</Button>
         </Item>
-
       </Form>
     </Content>
   );
