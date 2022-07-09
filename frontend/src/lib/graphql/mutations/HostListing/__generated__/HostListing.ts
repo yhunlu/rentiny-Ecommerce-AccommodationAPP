@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { HostListingInput, ListingType } from "./../../../globalTypes";
+import { HostListingInput } from "./../../../globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: HostListing
@@ -12,13 +12,6 @@ import { HostListingInput, ListingType } from "./../../../globalTypes";
 export interface HostListing_hostListing {
   __typename: "Listing";
   id: string;
-  title: string;
-  description: string;
-  image: string;
-  type: ListingType;
-  address: string;
-  price: number;
-  numOfGuests: number;
 }
 
 export interface HostListing {
