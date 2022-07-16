@@ -7,7 +7,7 @@ export const Cloudinary = {
       api_key: process.env.CLOUDINARY_KEY,
       api_secret: process.env.CLOUDINARY_SECRET,
       cloud_name: process.env.CLOUDINARY_NAME,
-      folder: 'TH_Assets/',
+      folder: 'rentiny_assets/',
     });
 
     return res.secure_url;
