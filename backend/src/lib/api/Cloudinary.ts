@@ -1,4 +1,4 @@
-//grepper Typescript Cloudinary api setup
+//grepper typescript cloudinary api setup
 import cloudinary from 'cloudinary';
 
 export const Cloudinary = {
