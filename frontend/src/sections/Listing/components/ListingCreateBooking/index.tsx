@@ -3,8 +3,10 @@ import React from 'react';
 import { displayErrorMessage, formatListingPrice } from '../../../../lib/utils';
 import moment, { Moment } from 'moment';
 import { Viewer } from './../../../../lib/types';
+import { Listing as ListingData } from './../../../../lib/graphql/queries/Listing/__generated__/Listing';
 interface Props {
   viewer: Viewer;
+  host: ListingData['listing']['host'];
   price: number;
   checkInDate: Moment | null;
   checkOutDate: Moment | null;
@@ -16,6 +18,7 @@ const { Paragraph, Title, Text } = Typography;
 
 const ListingCreateBooking = ({
   viewer,
+  host,
   price,
   checkInDate,
   checkOutDate,
@@ -43,13 +46,16 @@ const ListingCreateBooking = ({
     setCheckOutDate(selectedCheckOutDate);
   };
 
-  const checkInInputDisabled = !viewer.id;
+  const viewerIsHost = viewer.id === host.id;
+  const checkInInputDisabled = !viewer.id || viewerIsHost;
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
   const buttonDisabled = checkOutInputDisabled || !checkInDate || !checkOutDate;
 
   let buttonMessage = "You won't be charged yet.";
   if (!viewer.id) {
     buttonMessage = "You have to be signed in to book a listing!";
+  } else if (viewerIsHost) {
+    buttonMessage = "You can't book your own listing!";
   }
 
   return (
