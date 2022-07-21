@@ -2,7 +2,9 @@ import { Button, Card, DatePicker, Divider, Typography } from 'antd';
 import React from 'react';
 import { displayErrorMessage, formatListingPrice } from '../../../../lib/utils';
 import moment, { Moment } from 'moment';
+import { Viewer } from './../../../../lib/types';
 interface Props {
+  viewer: Viewer;
   price: number;
   checkInDate: Moment | null;
   checkOutDate: Moment | null;
@@ -10,9 +12,10 @@ interface Props {
   setCheckOutDate: (checkOutDate: Moment | null) => void;
 }
 
-const { Paragraph, Title } = Typography;
+const { Paragraph, Title, Text } = Typography;
 
 const ListingCreateBooking = ({
+  viewer,
   price,
   checkInDate,
   checkOutDate,
@@ -40,8 +43,14 @@ const ListingCreateBooking = ({
     setCheckOutDate(selectedCheckOutDate);
   };
 
-  const checkOutInputDisabled = !checkInDate;
-  const buttonDisabled = !checkInDate || !checkOutDate;
+  const checkInInputDisabled = !viewer.id;
+  const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
+  const buttonDisabled = checkOutInputDisabled || !checkInDate || !checkOutDate;
+
+  let buttonMessage = "You won't be charged yet.";
+  if (!viewer.id) {
+    buttonMessage = "You have to be signed in to book a listing!";
+  }
 
   return (
     <div className="listing-booking">
@@ -60,6 +69,7 @@ const ListingCreateBooking = ({
               value={checkInDate ? checkInDate : undefined}
               format={'YYYY/MM/DD'}
               showToday={false}
+              disabled={checkInInputDisabled}
               disabledDate={disabledDate}
               onChange={dataValue => setCheckInDate(dataValue)}
               onOpenChange={() => setCheckOutDate(null)}
@@ -86,6 +96,7 @@ const ListingCreateBooking = ({
         >
           Request to book!
         </Button>
+        <Text type="secondary" mark>{buttonMessage}</Text>
       </Card>
     </div>
   );

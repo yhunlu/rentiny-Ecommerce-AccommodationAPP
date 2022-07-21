@@ -80,7 +80,7 @@ const App = () => {
           />
           <Route path="/" element={<Home />} />
           <Route path="/host" element={<Host viewer={viewer} />} />
-          <Route path="/listing/:listingId" element={<Listing />} />
+          <Route path="/listing/:listingId" element={<Listing viewer={viewer} />} />
           <Route
             path="/listings"
             element={<Listings title="Rentiny Listings" />}

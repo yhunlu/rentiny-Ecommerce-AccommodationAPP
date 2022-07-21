@@ -14,11 +14,16 @@ import {
   ListingCreateBooking,
   ListingDetails,
 } from './components';
+import { Viewer } from '../../lib/types';
 
 const PAGE_LIMIT = 3;
 const { Content } = Layout;
 
-const Listing = () => {
+interface Props {
+  viewer: Viewer;
+}
+
+const Listing = ({ viewer }: Props) => {
   const [bookingPage, setBookingPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
@@ -128,6 +133,7 @@ const Listing = () => {
 
   const listingCreateBookingElement = listing ? (
     <ListingCreateBooking 
+      viewer={viewer}
       price={listing.price}
       checkInDate={checkInDate}
       checkOutDate={checkOutDate}
