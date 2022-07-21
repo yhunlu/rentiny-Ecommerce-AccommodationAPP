@@ -47,7 +47,7 @@ const ListingCreateBooking = ({
   };
 
   const viewerIsHost = viewer.id === host.id;
-  const checkInInputDisabled = !viewer.id || viewerIsHost;
+  const checkInInputDisabled = !viewer.id || viewerIsHost || !host.hasWallet;
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
   const buttonDisabled = checkOutInputDisabled || !checkInDate || !checkOutDate;
 
@@ -56,6 +56,8 @@ const ListingCreateBooking = ({
     buttonMessage = "You have to be signed in to book a listing!";
   } else if (viewerIsHost) {
     buttonMessage = "You can't book your own listing!";
+  } else if (!host.hasWallet) {
+    buttonMessage = "The host has disconnected from Stripe and thus won't be able to receive payments.";
   }
 
   return (
