@@ -135,6 +135,7 @@ const Listing = ({ viewer }: Props) => {
     <ListingCreateBooking 
       viewer={viewer}
       host={listing.host}
+      bookingsIndex={listing.bookingsIndex}
       price={listing.price}
       checkInDate={checkInDate}
       checkOutDate={checkOutDate}

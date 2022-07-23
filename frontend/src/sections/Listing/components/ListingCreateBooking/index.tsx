@@ -4,10 +4,12 @@ import { displayErrorMessage, formatListingPrice } from '../../../../lib/utils';
 import moment, { Moment } from 'moment';
 import { Viewer } from './../../../../lib/types';
 import { Listing as ListingData } from './../../../../lib/graphql/queries/Listing/__generated__/Listing';
+import { BookingsIndex } from './types';
 interface Props {
   viewer: Viewer;
   host: ListingData['listing']['host'];
   price: number;
+  bookingsIndex: ListingData['listing']['bookingsIndex'];
   checkInDate: Moment | null;
   checkOutDate: Moment | null;
   setCheckInDate: (checkInDate: Moment | null) => void;
@@ -20,15 +22,30 @@ const ListingCreateBooking = ({
   viewer,
   host,
   price,
+  bookingsIndex,
   checkInDate,
   checkOutDate,
   setCheckInDate,
   setCheckOutDate,
 }: Props) => {
+  const bookingsIndexJSON: BookingsIndex = JSON.parse(bookingsIndex);
+
+  const dateIsBooked = (currentDate: Moment) => {
+    const year = currentDate.year();
+    const month = currentDate.month();
+    const day = currentDate.date();
+
+    if (bookingsIndexJSON[year] && bookingsIndexJSON[year][month]) {
+      return Boolean(bookingsIndexJSON[year][month][day]);
+    } else {
+      return false;
+    }
+  }
+
   const disabledDate = (currentDate?: Moment) => {
     if (currentDate) {
       const dateIsBeforeEndOfDay = currentDate.isBefore(moment().endOf('day'));
-      return dateIsBeforeEndOfDay;
+      return dateIsBeforeEndOfDay || dateIsBooked(currentDate);
     } else {
       return false;
     }
@@ -40,6 +57,22 @@ const ListingCreateBooking = ({
         return displayErrorMessage(
           'Check-out date must be after check-in date'
         );
+      }
+
+      let dateCursor = checkInDate;
+
+      while (moment(dateCursor).isBefore(selectedCheckOutDate, 'days')) {
+        dateCursor = moment(dateCursor).add(1, 'days');
+
+        const year = moment(dateCursor).year();
+        const month = moment(dateCursor).month();
+        const day = moment(dateCursor).date();
+
+        if (bookingsIndexJSON[year] && bookingsIndexJSON[year][month][day]) {
+          return displayErrorMessage(
+            'You cannot book a period of time that overlaps existing bookings. Please try again!' 
+          );
+        }
       }
     }
 
