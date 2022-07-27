@@ -20,6 +20,14 @@ import {
 } from './lib/graphql/mutations/LogIn/__generated__/LogIn';
 import { useMutation } from '@apollo/client';
 import { AppHeaderSkeleton, ErrorBanner } from './lib/components';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import env from "react-dotenv";
+
+const stripeAPI_key = `${env.STRIPE_PUBLISHABLE_KEY}`;
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe(stripeAPI_key);
 
 const initialViewer: Viewer = {
   id: null,
@@ -66,35 +74,43 @@ const App = () => {
   ) : null;
 
   return (
-    <Router>
-      <Layout id="app">
-        {logInErrorBannerElement}
-        <Affix offsetTop={0} className="app__affix-header">
-          <AppHeader viewer={viewer} setViewer={setViewer} />
-        </Affix>
-        <Routes>
-          <Route path="/login" element={<Login setViewer={setViewer} />} />
-          <Route
-            path="/stripe"
-            element={<Stripe viewer={viewer} setViewer={setViewer} />}
-          />
-          <Route path="/" element={<Home />} />
-          <Route path="/host" element={<Host viewer={viewer} />} />
-          <Route path="/listing/:listingId" element={<Listing viewer={viewer} />} />
-          <Route
-            path="/listings"
-            element={<Listings title="Rentiny Listings" />}
-          >
+    <Elements stripe={stripePromise}>
+      <Router>
+        <Layout id="app">
+          {logInErrorBannerElement}
+          <Affix offsetTop={0} className="app__affix-header">
+            <AppHeader viewer={viewer} setViewer={setViewer} />
+          </Affix>
+          <Routes>
+            <Route path="/login" element={<Login setViewer={setViewer} />} />
             <Route
-              path="/listings/:location"
-              element={<Listings title="Rentiny Listings" />}
+              path="/stripe"
+              element={<Stripe viewer={viewer} setViewer={setViewer} />}
             />
-          </Route>
-          <Route path="/user/:userId" element={<User viewer={viewer} setViewer={setViewer} />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Layout>
-    </Router>
+            <Route path="/" element={<Home />} />
+            <Route path="/host" element={<Host viewer={viewer} />} />
+            <Route
+              path="/listing/:listingId"
+              element={<Listing viewer={viewer} />}
+            />
+            <Route
+              path="/listings"
+              element={<Listings title="Rentiny Listings" />}
+            >
+              <Route
+                path="/listings/:location"
+                element={<Listings title="Rentiny Listings" />}
+              />
+            </Route>
+            <Route
+              path="/user/:userId"
+              element={<User viewer={viewer} setViewer={setViewer} />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </Elements>
   );
 };
 
