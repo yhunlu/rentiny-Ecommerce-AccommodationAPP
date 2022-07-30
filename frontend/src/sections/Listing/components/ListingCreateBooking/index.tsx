@@ -28,7 +28,7 @@ const ListingCreateBooking = ({
   checkOutDate,
   setCheckInDate,
   setCheckOutDate,
-  setModalVisible
+  setModalVisible,
 }: Props) => {
   const bookingsIndexJSON: BookingsIndex = JSON.parse(bookingsIndex);
 
@@ -42,12 +42,20 @@ const ListingCreateBooking = ({
     } else {
       return false;
     }
-  }
+  };
 
   const disabledDate = (currentDate?: Moment) => {
     if (currentDate) {
       const dateIsBeforeEndOfDay = currentDate.isBefore(moment().endOf('day'));
-      return dateIsBeforeEndOfDay || dateIsBooked(currentDate);
+      const dateIsMoreThanThreeMonthsAhead = moment(currentDate).isAfter(
+        moment().endOf('day').add(90, 'days')
+      );
+
+      return (
+        dateIsBeforeEndOfDay ||
+        dateIsMoreThanThreeMonthsAhead ||
+        dateIsBooked(currentDate)
+      );
     } else {
       return false;
     }
@@ -70,9 +78,13 @@ const ListingCreateBooking = ({
         const month = moment(dateCursor).month();
         const day = moment(dateCursor).date();
 
-        if (bookingsIndexJSON[year] && bookingsIndexJSON[year][month][day]) {
+        if (
+          bookingsIndexJSON[year] &&
+          bookingsIndexJSON[year][month] &&
+          bookingsIndexJSON[year][month][day]
+        ) {
           return displayErrorMessage(
-            'You cannot book a period of time that overlaps existing bookings. Please try again!' 
+            "You can't book a period of time that overlaps existing bookings. Please try again!"
           );
         }
       }
@@ -86,13 +98,14 @@ const ListingCreateBooking = ({
   const checkOutInputDisabled = checkInInputDisabled || !checkInDate;
   const buttonDisabled = checkOutInputDisabled || !checkInDate || !checkOutDate;
 
-  let buttonMessage = "You won't be charged yet.";
+  let buttonMessage = "You won't be charged yet";
   if (!viewer.id) {
-    buttonMessage = "You have to be signed in to book a listing!";
+    buttonMessage = 'You have to be signed in to book a listing!';
   } else if (viewerIsHost) {
     buttonMessage = "You can't book your own listing!";
   } else if (!host.hasWallet) {
-    buttonMessage = "The host has disconnected from Stripe and thus won't be able to receive payments.";
+    buttonMessage =
+      "The host has disconnected from Stripe and thus won't be able to receive payments!";
   }
 
   return (
@@ -114,7 +127,7 @@ const ListingCreateBooking = ({
               showToday={false}
               disabled={checkInInputDisabled}
               disabledDate={disabledDate}
-              onChange={dataValue => setCheckInDate(dataValue)}
+              onChange={(dataValue) => setCheckInDate(dataValue)}
               onOpenChange={() => setCheckOutDate(null)}
             />
           </div>
@@ -126,7 +139,7 @@ const ListingCreateBooking = ({
               showToday={false}
               disabled={checkOutInputDisabled}
               disabledDate={disabledDate}
-              onChange={dataValue => verifyAndSetCheckOutDate(dataValue)}
+              onChange={(dataValue) => verifyAndSetCheckOutDate(dataValue)}
             />
           </div>
         </div>
@@ -140,7 +153,9 @@ const ListingCreateBooking = ({
         >
           Request to book!
         </Button>
-        <Text type="secondary" mark>{buttonMessage}</Text>
+        <Text type="secondary" mark>
+          {buttonMessage}
+        </Text>
       </Card>
     </div>
   );

@@ -22,7 +22,7 @@ import { useMutation } from '@apollo/client';
 import { AppHeaderSkeleton, ErrorBanner } from './lib/components';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import env from "react-dotenv";
+import env from "@ludovicm67/react-dotenv";
 
 const stripeAPI_key = `${env.STRIPE_PUBLISHABLE_KEY}`;
 // Make sure to call `loadStripe` outside of a component’s render to avoid

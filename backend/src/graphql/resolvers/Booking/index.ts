@@ -3,10 +3,21 @@ import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { Stripe } from '../../../lib/api';
 import { authorize } from '../../../lib/utils';
-import { Database, Booking, Listing, BookingsIndex } from './../../../lib/types';
+import {
+  Database,
+  Booking,
+  Listing,
+  BookingsIndex,
+} from './../../../lib/types';
 import { CreateBookingArgs } from './types';
 
-const resolveBookingsIndex = (bookingsIndex: BookingsIndex, checkInDate: string, checkOutDate: string): BookingsIndex => {
+const millisecondsPerDay = 86400000;
+
+const resolveBookingsIndex = (
+  bookingsIndex: BookingsIndex,
+  checkInDate: string,
+  checkOutDate: string
+): BookingsIndex => {
   let dateCursor = new Date(checkInDate);
   const checkOut = new Date(checkOutDate);
   const newBookingsIndex: BookingsIndex = { ...bookingsIndex };
@@ -27,14 +38,16 @@ const resolveBookingsIndex = (bookingsIndex: BookingsIndex, checkInDate: string,
     if (!newBookingsIndex[year][month][day]) {
       newBookingsIndex[year][month][day] = true;
     } else {
-      throw new Error("selected dates cannot overlap dates that have already been booked.");
+      throw new Error(
+        'selected dates cannot overlap dates that have already been booked.'
+      );
     }
 
-    dateCursor = new Date(dateCursor.getTime() + 86400000);
+    dateCursor = new Date(dateCursor.getTime() + millisecondsPerDay);
   }
 
   return newBookingsIndex;
-}
+};
 
 export const bookingResolvers: IResolvers = {
   Mutation: {
@@ -73,12 +86,18 @@ export const bookingResolvers: IResolvers = {
         }
 
         // create a new bookingsIndex for listing being booked
-        const bookingsIndex = resolveBookingsIndex(listing.bookingsIndex, checkIn, checkOut);
+        const bookingsIndex = resolveBookingsIndex(
+          listing.bookingsIndex,
+          checkIn,
+          checkOut
+        );
 
         // get total price to charge
-        const totalPrice =
+        const totalPrice = Math.round(
           listing.price *
-          ((checkOutDate.getTime() - checkInDate.getTime()) / (86400000 + 1));
+            ((checkOutDate.getTime() - checkInDate.getTime()) /
+              (millisecondsPerDay + 1))
+        );
 
         // get user document of host of listing
         const host = await db.users.findOne({ _id: listing.host });
@@ -106,7 +125,7 @@ export const bookingResolvers: IResolvers = {
         // update user document of host to increment income
         await db.users.updateOne(
           { _id: host._id },
-          { $inc: { income: totalPrice } }
+          { $inc: { income: (totalPrice - (totalPrice * 0.05)) } }
         );
 
         // update bookings field of tenant
@@ -144,12 +163,8 @@ export const bookingResolvers: IResolvers = {
     ): Promise<Listing | null> => {
       return db.listings.findOne({ _id: booking.listing });
     },
-    tenant: (
-      booking: Booking,
-      _args: unknown,
-      { db }: { db: Database }
-    ) => {
+    tenant: (booking: Booking, _args: unknown, { db }: { db: Database }) => {
       return db.users.findOne({ _id: booking.tenant });
-    }
+    },
   },
 };

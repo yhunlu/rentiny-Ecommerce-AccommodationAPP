@@ -18,7 +18,9 @@
 .env.test.local
 .env.production.local
 .env.js
+/window.env
 /public/env.js
+/public/window.env.js
 
 npm-debug.log*
 yarn-debug.log*

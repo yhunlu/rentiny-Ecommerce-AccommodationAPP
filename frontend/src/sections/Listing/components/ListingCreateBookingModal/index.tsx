@@ -8,59 +8,83 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { CREATE_BOOKING } from '../../../../lib/graphql/mutations';
+import { CreateBooking as CreateBookingData, CreateBookingVariables } from './../../../../lib/graphql/mutations/CreateBooking/__generated__/CreateBooking';
 
 interface Props {
+  id: string;
   price: number;
   modalVisible: boolean;
   checkInDate: Moment;
   checkOutDate: Moment;
   setModalVisible: (modalVisible: boolean) => void;
+  clearBookingData: () => void;
+  // Promise because async function!
+  handleListingRefetch: () => Promise<void>;
 }
 
 const { Paragraph, Text, Title } = Typography;
 
 const ListingCreateBookingModal = ({
+  id,
   price,
   modalVisible,
   checkInDate,
   checkOutDate,
   setModalVisible,
+  clearBookingData,
+  handleListingRefetch,
 }: Props) => {
   const stripe = useStripe();
   const elements = useElements();
-
-  const [message, setMessage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleCreateBooking = async (event: any) => {
-// We don't want to let default form submission happen here,
-    // which would refresh the page.
-    event.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make  sure to disable form submission until Stripe.js has loaded.
-      return;
+  
+  const [createBooking, { loading: createBookingLoading }] = useMutation<CreateBookingData, CreateBookingVariables>(CREATE_BOOKING, {
+    onCompleted: () => {
+      clearBookingData();
+      handleListingRefetch();
+      displaySuccessNotification("You've successfully booked the listing!", "Booking history can always be found in your User page.");
+    },
+    onError: (error) => {
+      displayErrorMessage(`Sorry! We weren't able to book the listing. Please try again later; ${error.message}`);
     }
-
-    const card = elements.getElement(CardElement)!;
-    const result = await stripe.createToken(card);
-
-    if (result.error) {
-      // Show error to your customer.
-      console.log(result.error.message);
-    } else {
-      // Send the token to your server.
-      // This function does not exist yet; we will define it in the next step.
-      // stripeTokenHandler(result.token);
-    }
-  };
+  });
 
   const daysBooked = checkOutDate.diff(checkInDate, 'days') + 1;
   const listingPrice = price * daysBooked;
   //   const rentinyFee = 0.05 * listingPrice;
   //   const totalPrice = listingPrice + rentinyFee;
   const totalPrice = listingPrice;
+
+  const handleCreateBooking = async (event: any) => {
+    // We don't want to let default form submission happen here,
+    // which would refresh the page.
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make  sure to disable form submission until Stripe.js has loaded.
+      return displayErrorMessage("Sorry! We weren't able to connect with Stripe. Please try again later.");
+    }
+
+    const card = elements.getElement(CardElement)!;
+    const { token: stripeToken, error } = await stripe.createToken(card);
+
+    if (stripeToken) {
+      createBooking({
+        variables: {
+          input: {
+            id,
+            source: stripeToken.id,
+            checkIn: moment(checkInDate).format("YYYY-MM-DD"),
+            checkOut: moment(checkOutDate).format("YYYY-MM-DD"),
+          },
+        },
+      });
+    } else {
+      displayErrorMessage(error && error.message ? error.message : "Sorry! We weren't able to process your payment. Please try again later.");
+    }
+  };
 
   return (
     <Modal
@@ -113,6 +137,7 @@ const ListingCreateBookingModal = ({
             size="large"
             type="primary"
             className="listing-booking-modal__cta"
+            loading={createBookingLoading}
             onClick={handleCreateBooking}
           >
             Book

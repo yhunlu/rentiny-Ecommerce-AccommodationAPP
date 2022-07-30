@@ -54,6 +54,7 @@ const User = ({ viewer, setViewer }: UserProps) => {
   }
 
   if (error) {
+    console.log(error.message);
     return (
       <Content className="user">
         <ErrorBanner description="This user may not exist or we've encountered an error. Please try again soon." />

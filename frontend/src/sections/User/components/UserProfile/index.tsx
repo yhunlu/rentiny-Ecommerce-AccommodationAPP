@@ -9,30 +9,31 @@ import {
 import { User as UserData } from './../../../../lib/graphql/queries/User/__generated__/User';
 import { DisconnectStripe as DisconnectStripeData } from '../../../../lib/graphql/mutations/DisconnectStripe/__generated__/DisconnectStripe';
 import { Viewer } from './../../../../lib/types';
+
 interface Props {
   user: UserData['user'];
   viewer: Viewer;
   viewerIsUser: boolean;
   setViewer: (viewer: Viewer) => void;
-  handleUserRefetch: () => void;
+  handleUserRefetch: () => Promise<void>;
 }
 
 const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_LndJ7chnMtnlb51VtNaWkdxsNgLQ6Fpy&scope=read_write`;
 const { Paragraph, Text, Title } = Typography;
 
 const UserProfile = ({ user, viewer, viewerIsUser, setViewer, handleUserRefetch }: Props) => {
-  
+
   const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(
     DISCONNECT_STRIPE,
     {
       onCompleted: (data) => {
         if (data && data.disconnectStripe) {
           setViewer({ ...viewer, hasWallet: data.disconnectStripe.hasWallet });
+          handleUserRefetch();
           displaySuccessNotification(
             "You've successfully disconnected your Stripe account.",
             "You'll have to reconnect with Stripe to continue to create listings."
           );
-          handleUserRefetch();
         }
       },
       onError: (error) => {
