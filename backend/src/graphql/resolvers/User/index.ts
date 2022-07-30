@@ -44,10 +44,8 @@ async function getUserListings(
       _id: { $in: user.listings },
     });
 
-    cursor = cursor.skip(calculateSkip(page, data.total));
-    cursor = cursor.limit(data.total);
-
     data.total = await cursor.count();
+    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.result = await cursor.toArray();
 
     return data;
@@ -75,10 +73,8 @@ async function getUserBookings(
       _id: { $in: user.bookings },
     });
 
-    cursor = cursor.skip(calculateSkip(page, limit));
-    cursor = cursor.limit(limit);
-
     data.total = await cursor.count();
+    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.result = await cursor.toArray();
 
     return data;

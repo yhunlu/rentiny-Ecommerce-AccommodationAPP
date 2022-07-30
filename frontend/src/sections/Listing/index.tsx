@@ -17,7 +17,7 @@ import {
 } from './components';
 import { Viewer } from '../../lib/types';
 
-const PAGE_LIMIT = 6;
+const PAGE_LIMIT = 3;
 const { Content } = Layout;
 
 interface Props {

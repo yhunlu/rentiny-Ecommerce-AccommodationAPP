@@ -221,10 +221,8 @@ async function getListingBookings(
       _id: { $in: listing.bookings },
     });
 
-    cursor = cursor.skip(calculateSkip(page, limit));
-    cursor = cursor.limit(limit);
-
     data.total = await cursor.count();
+    cursor = cursor.limit(limit).skip(calculateSkip(page, limit));
     data.result = await cursor.toArray();
 
     return data;

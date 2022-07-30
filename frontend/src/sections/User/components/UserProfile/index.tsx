@@ -9,6 +9,7 @@ import {
 import { User as UserData } from './../../../../lib/graphql/queries/User/__generated__/User';
 import { DisconnectStripe as DisconnectStripeData } from '../../../../lib/graphql/mutations/DisconnectStripe/__generated__/DisconnectStripe';
 import { Viewer } from './../../../../lib/types';
+import env from "@ludovicm67/react-dotenv";
 
 interface Props {
   user: UserData['user'];
@@ -18,7 +19,7 @@ interface Props {
   handleUserRefetch: () => Promise<void>;
 }
 
-const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_LndJ7chnMtnlb51VtNaWkdxsNgLQ6Fpy&scope=read_write`;
+const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${env.STRIPE_CLIENT_ID}&scope=read_write`;
 const { Paragraph, Text, Title } = Typography;
 
 const UserProfile = ({ user, viewer, viewerIsUser, setViewer, handleUserRefetch }: Props) => {
