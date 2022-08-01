@@ -7,7 +7,6 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
-import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_BOOKING } from '../../../../lib/graphql/mutations';
 import { CreateBooking as CreateBookingData, CreateBookingVariables } from './../../../../lib/graphql/mutations/CreateBooking/__generated__/CreateBooking';
@@ -120,10 +119,6 @@ const ListingCreateBookingModal = ({
             {formatListingPrice(price, false)} * {daysBooked} days ={' '}
             <Text strong>{formatListingPrice(listingPrice, false)}</Text>
           </Paragraph>
-          {/* <Paragraph>
-            Rentiny Fee <sub>~ 5%</sub> ={' '}
-            <Text strong>{formatListingPrice(rentinyFee)}</Text>
-          </Paragraph> */}
           <Paragraph className="listing-booking-modal__charge-summary-total">
             Total = <Text mark>{formatListingPrice(totalPrice, false)}</Text>
           </Paragraph>
