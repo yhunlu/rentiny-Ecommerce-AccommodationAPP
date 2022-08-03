@@ -10,7 +10,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "tsc -p backend/build",
     "seed": "ts-node backend/temp/seed.ts",
-    "clear": "ts-node backend/temp/clear.ts"
+    "clear": "ts-node backend/temp/clear.ts",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "YAHYA UNLU",
