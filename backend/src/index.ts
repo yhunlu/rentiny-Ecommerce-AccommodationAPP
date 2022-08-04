@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import cookieParser from 'cookie-parser';
 import { ApolloServer } from 'apollo-server-express';
 import express, { Application } from 'express';
@@ -8,6 +6,8 @@ import { resolvers, typeDefs } from './graphql';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
+
+// import 'dotenv/config';
 
 const PORT = process.env.PORT || 5000;
 
