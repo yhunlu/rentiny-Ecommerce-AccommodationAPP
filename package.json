@@ -6,7 +6,6 @@
   "engines": {
     "node": "16.13.2"
   },
-  "type": "module",
   "scripts": {
     "server": "ts-node-dev --respawn backend/src/index.ts",
     "client": "npm start --prefix frontend",
