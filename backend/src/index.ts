@@ -24,18 +24,6 @@ const mount = async (app: Application) => {
 
     app.use(cors());
 
-    const __dirname = path.resolve();
-    if (process.env.NODE_ENV === 'production') {
-      // go to find static files from frontend
-      app.use(express.static(path.join(__dirname, '/frontend/build')));
-
-      app.get('/*', (_req, res) => {
-        res.sendFile(
-          path.resolve(__dirname, 'frontend', 'build', 'index.html')
-        );
-      });
-    }
-
     const server = new ApolloServer({
       typeDefs,
       resolvers,
@@ -43,6 +31,18 @@ const mount = async (app: Application) => {
     });
     await server.start();
     server.applyMiddleware({ app, path: '/api' });
+
+    const __dirname = path.resolve();
+    if (process.env.NODE_ENV === 'production') {
+      // go to find static files from frontend
+      app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+      app.get('/', (_req, res) => {
+        res.sendFile(
+          path.resolve(__dirname, 'frontend', 'build', 'index.html')
+        );
+      });
+    }
 
     app.listen(PORT, () => console.log(`[app]: http://localhost:${PORT}`));
   } catch (error) {
