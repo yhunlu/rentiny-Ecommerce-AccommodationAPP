@@ -13,7 +13,6 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "seed": "ts-node backend/temp/seed.ts",
     "clear": "ts-node backend/temp/clear.ts",
-    "postinstall": "tsc",
     "build": "tsc -p ./",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
