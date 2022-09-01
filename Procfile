@@ -1,1 +1,1 @@
-web: node backend/src/index.ts
+web: node backend/src/index
