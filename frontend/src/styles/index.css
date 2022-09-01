@@ -502,7 +502,7 @@
 .log-in-card__google-button {
   margin: 1px auto;
   border-radius: 2px;
-  background-color: #0f9d58;
+  background-color: #4285f4;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.24), 0 0 1px 0 rgba(0, 0, 0, 0.12);
   border: none;
   display: flex;
@@ -516,7 +516,7 @@
 }
 .log-in-card__google-button:active {
   color: Black;
-  background: #2cfc97;
+  background: #4285f4;
 }
 .log-in-card__google-button-logo {
   margin: 5px auto;
