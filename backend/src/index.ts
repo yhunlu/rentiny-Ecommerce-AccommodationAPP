@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-
 dotenv.config();
 
 import cookieParser from 'cookie-parser';
@@ -39,7 +38,7 @@ const mount = async (app: Application) => {
       // go to find static files from frontend
       app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-      app.get('/', (_req, res) => {
+      app.get('/*', (_req, res) => {
         res.sendFile(
           path.resolve(__dirname, 'frontend', 'build', 'index.html')
         );
