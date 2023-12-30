@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.ts",
   "engines": {
-    "node": "16.13.2"
+    "node": "20.9.0"
   },
   "scripts": {
     "server_": "ts-node-dev backend/src/index",
     "server": "ts-node backend/src/index",
     "client": "npm start --prefix frontend",
     "server-nodemon": "nodemon --exec ts-node backend/src/index",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server_\" \"npm run client\"",
     "seed": "ts-node backend/temp/seed.ts",
     "clear": "ts-node backend/temp/clear.ts",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
